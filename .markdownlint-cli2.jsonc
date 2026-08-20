@@ -7,5 +7,14 @@
     "default": true,
     "MD013": false,
     "MD060": false
-  }
+  },
+  // A PR template opens on a section heading, not an H1 — GitHub renders its body inside the PR.
+  // Scoped to that file rather than disabled project-wide.
+  "overrides": [
+    {
+      "filter": [".github/PULL_REQUEST_TEMPLATE.md"],
+      "config": { "MD041": false },
+      "combine": "merge"
+    }
+  ]
 }
