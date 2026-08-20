@@ -35,7 +35,8 @@ already checked out. Merging is `review:pr-merge`'s; reviewing the change is `re
 ## Rules
 
 - **Nothing that is not in the diff.** No invented change, no section the template does not define.
-- **Preserve every HTML comment** from the template.
+- **Drop the template's authoring prompts once answered; keep any comment addressed to a machine** —
+  a bot directive, a release-note marker, a `do not remove`.
 - Plain `-` bullets in the changes list, never numbered.
 - **Commit nothing and amend nothing.** The branch is taken as it stands.
 - **An existing open PR for the branch is the answer**, not a reason to create a second one: report
