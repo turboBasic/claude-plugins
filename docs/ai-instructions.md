@@ -43,8 +43,14 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   label scheme — it belongs in that consumer's own `.claude/skills/` instead.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
   a change should reach consumers, not on every edit.
-- **A plugin whose source is another repository is listed with `git-subdir`, never copied in here**, so
-  that repository stays where it is edited. Pinned to `ref: main`, its commit is the version.
+- **A plugin whose source is another repository is listed by URL, never copied in here**, so that
+  repository stays where it is edited. The shape: a `url` source over HTTPS — a `github` source clones
+  over SSH — pinned to `ref: main` and carrying no `version`, so the resolved commit is the version and
+  `/plugin marketplace update` alone ships a change. With `strict: false` the entry names the skill
+  itself (`"skills": ["./.claude/skills/<name>"]`), so the source repository needs no `plugin.json` and
+  a sibling skill it does not name stays unpublished. **Not `git-subdir`:** that fetches only the named
+  path, which strands a knowledge base living above the skill directory. Such a plugin is named for its
+  repository rather than a workflow role, and the role grouping governs only the plugins authored here.
 - **A citation between two plugins here is namespaced `plugin:name`.**
 - **A fact has one home, and pointers to it never round-trip.**
 - **An agent's `tools:` is an allowlist; a skill's `allowed-tools` is not.** An agent that cites a skill
