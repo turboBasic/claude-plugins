@@ -1,0 +1,11 @@
+{
+  // MD013 (line length) is off for the same reason as in the sibling repos: committed Markdown
+  // wraps freely here, and the prose published to GitHub is what MD013 would be protecting.
+  // MD060 (table pipe style) flags the standard unpadded separator row (|---|---|) as
+  // inconsistent with padded header/data rows in every GFM table.
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD060": false
+  }
+}

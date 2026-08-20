@@ -1,0 +1,52 @@
+[tools]
+claude = "latest"
+node = "24.19.0"
+"npm:cspell-cli" = "10.0.1"
+"npm:markdownlint-cli2" = "0.23.2"
+prek = "latest"
+taplo = "latest"
+
+[tasks.setup]
+description = "Install git hooks"
+run = ["prek install", "mise run git:ff-only"]
+
+# A guardrail, not a gate: it makes an accidental merge fail at `git pull` on a diverged branch.
+[tasks."git:ff-only"]
+description = "Refuse to create a merge commit in this clone, and drop refs the remote deleted"
+run = [
+  "git config --local merge.ff only",
+  "git config --local pull.ff only",
+  "git config --local fetch.prune true",
+]
+
+[tasks.fmt]
+description = "Format TOML"
+run = "taplo fmt"
+
+# Each lint task selects prek hooks by id, so .pre-commit-config.yaml stays the only implementation
+# and CI cannot drift from what a local `prek run` does. --all-files: nothing is staged on a CI checkout.
+[tasks."lint:format"]
+description = "Check TOML is formatted"
+run = "prek run --all-files taplo-fmt"
+
+[tasks."lint:manifests"]
+description = "Check every plugin and marketplace manifest is valid JSON"
+run = "prek run --all-files check-json manifests-well-formed"
+
+[tasks."lint:markdown"]
+description = "Lint Markdown with markdownlint-cli2"
+run = "prek run --all-files markdownlint-cli2"
+
+[tasks."lint:cspell"]
+description = "Spell-check every tracked file with cspell"
+run = "prek run --all-files cspell"
+
+[tasks.lint]
+description = "Run every linter"
+depends = ["lint:format", "lint:manifests", "lint:markdown", "lint:cspell"]
+
+# No test task yet: nothing here executes. A skill is prose, and `lint` is the whole gate until
+# a plugin grows a script worth testing.
+[tasks.ci]
+description = "Run everything CI runs, locally"
+depends = ["lint"]

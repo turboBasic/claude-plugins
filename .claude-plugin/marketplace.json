@@ -1,0 +1,10 @@
+{
+  "name": "turbobasic",
+  "owner": {
+    "name": "turboBasic"
+  },
+  "metadata": {
+    "description": "Shared Claude Code skills and agents for turboBasic projects, grouped by workflow role."
+  },
+  "plugins": []
+}

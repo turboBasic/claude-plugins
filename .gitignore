@@ -1,0 +1,7 @@
+tmp/
+
+.DS_Store
+node_modules/
+
+# Per-developer permission allowlist.
+.claude/settings.local.json

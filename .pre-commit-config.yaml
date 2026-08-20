@@ -1,0 +1,68 @@
+# Run through prek, not pre-commit: `prek run`, `prek install`. The file format is
+# pre-commit's, which is why the filename is unchanged.
+default_install_hook_types: [pre-commit, commit-msg]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.17.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+  - repo: local
+    hooks:
+      # check-json above proves the manifests parse; this proves the two that decide whether the
+      # marketplace loads at all are present and name themselves. A marketplace whose `plugins`
+      # array points at a directory with no plugin.json fails at install time, on the user's machine.
+      - id: manifests-well-formed
+        name: marketplace and plugin manifests name themselves
+        language: system
+        pass_filenames: false
+        always_run: true
+        entry: >-
+          bash -c 'rc=0;
+          m=.claude-plugin/marketplace.json;
+          node -e "const j=require(\"./$m\"); if(!j.name||!Array.isArray(j.plugins)) process.exit(1)"
+          || { echo "$m: needs a name and a plugins array."; rc=1; };
+          for p in */.claude-plugin/plugin.json; do [ -e "$p" ] || continue;
+          node -e "const j=require(\"./$p\"); if(!j.name) process.exit(1)"
+          || { echo "$p: needs a name."; rc=1; }; done; exit $rc'
+
+      # Local and `language: system` so it is the mise-pinned binary rather than a second copy a
+      # remote hook would install. No filenames: .taplo.toml decides which TOML is ours.
+      - id: taplo-fmt
+        name: taplo fmt
+        entry: taplo fmt
+        language: system
+        types: [toml]
+        pass_filenames: false
+
+      # Args match the upstream hook's defaults; --files must stay last so prek's filenames
+      # land after it.
+      - id: cspell
+        name: cspell
+        entry: cspell-cli
+        language: system
+        types: [text]
+        args:
+          - --no-must-find-files
+          - --no-progress
+          - --no-summary
+          - --gitignore
+          - --files
+
+      # `.markdownlint-cli2.jsonc` owns which files and rules apply, so no args are needed here.
+      - id: markdownlint-cli2
+        name: markdownlint-cli2
+        entry: markdownlint-cli2
+        language: system
+        types: [markdown]

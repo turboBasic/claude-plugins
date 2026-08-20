@@ -1,0 +1,38 @@
+# Project vocabulary: repository names, tooling and library identifiers.
+# One word per line; case-insensitive unless the entry is capitalised.
+
+# --- Names ---
+Andrii
+Melnyk
+aamelnyk
+turboBasic
+turbobasic
+
+# --- Repositories and hosts ---
+PopulationCircles
+agentlab
+argocd
+dxc
+moia
+popcircles
+sds
+
+# --- Tooling ---
+chezmoi
+commitizen
+cspell
+davidanson
+dotfiles
+jsonc
+markdownlint
+mise
+prek
+pyright
+ruff
+tamasfe
+taplo
+zinit
+
+# --- Claude Code vocabulary ---
+marketplaces
+subdir
