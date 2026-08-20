@@ -41,8 +41,8 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   a role goes to that role; a third that fits none retires the exception rather than extending it.
 - **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
   label scheme — it belongs in that consumer's own `.claude/skills/` instead.
-- **Every plugin entry carries a `version`.** Bump it when a change should reach consumers, not on every
-  edit.
+- **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
+  a change should reach consumers, not on every edit.
 - **A plugin whose source is another repository is listed with `git-subdir`, never copied in here**, so
   that repository stays where it is edited. Pinned to `ref: main`, its commit is the version.
 - **A citation between two plugins here is namespaced `plugin:name`.**
