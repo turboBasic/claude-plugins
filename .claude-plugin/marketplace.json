@@ -18,6 +18,12 @@
       "source": "./review",
       "description": "Review as architect, product owner and senior developer.",
       "version": "0.1.0"
+    },
+    {
+      "name": "hygiene",
+      "source": "./hygiene",
+      "description": "Repository drift swept as architect, and docs consolidated onto one owner per fact.",
+      "version": "0.1.0"
     }
   ]
 }
