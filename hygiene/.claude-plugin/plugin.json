@@ -1,6 +1,6 @@
 {
   "name": "hygiene",
-  "description": "Repository hygiene as architect — a report-only sweep for drift across the gates, the instruction layer and the local allowlist, and documentation consolidated onto one owner per fact.",
+  "description": "Repository hygiene as architect — a report-only sweep for drift across the gates, the instruction layer and the permission rules, and documentation consolidated onto one owner per fact.",
   "version": "0.1.0",
   "author": {
     "name": "turboBasic"

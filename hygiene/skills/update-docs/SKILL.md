@@ -8,23 +8,25 @@ description: Consolidate existing documentation onto one owner per fact and reso
 **Acting as architect.** It owns which file owns a fact. It does not author: a gap this sweep finds is
 reported, and filling it is its own work.
 
-**No new file, and no new section**, unless the invocation names one to create. A consolidation that ends
-with more documents than it started has moved the duplication rather than removed it.
+**This skill edits; reporting without editing is `hygiene:housekeeping`'s sweep**, which cites step 2's test.
+
+**No new file, and no new section**, unless the invocation names one to create.
 
 ## Steps
 
 1. **Inventory** every document in the repo — the README, `docs/`, the instruction layer, and doc comments
    carrying prose a document also carries.
-2. **Find the overlaps**: sections whose content substantially repeats across files, and statements that
-   contradict each other across files.
+2. **Find the overlaps**: statements that contradict each other across files, and repeats — delete a
+   sentence mentally, and if neither a route nor a fact is lost it is a repeat. Restatement is sanctioned in
+   an invariant list, a decision record that decided the fact, and the human-facing layer; a hit in the
+   human layer counts only when it contradicts its owner or pins an enforcement detail.
 3. **Name one owner per overlapping topic** — the most authoritative location, which is the one a reader
    would reach for first, not the longest treatment. Replace every other copy with a link to it.
 4. **Resolve each contradiction toward the code**, not toward the better-written sentence. Where the code
    and configuration answer it, they decide; where they do not, it is a judgment and goes in the report.
-5. **Leave the content you cannot verify.** Flag it. A deletion whose correctness rests on inference is
-   how a fact nobody could re-derive leaves the repo.
+5. **Leave the content you cannot verify.** Flag it.
 6. **Report** the changed files with one line each, what was consolidated onto which owner, and the
-   ambiguities left for a human. The commit body carries the same summary.
+   ambiguities left for a human.
 
 ## Judgment
 
