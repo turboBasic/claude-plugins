@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Repository hygiene as architect — a report-only sweep for drift across the gates, the instruction layer and the permission rules, and documentation consolidated onto one owner per fact.",
   "author": {
-    "name": "turboBasic",
+    "name": "Andrii Melnyk",
     "url": "https://github.com/turboBasic"
   }
 }

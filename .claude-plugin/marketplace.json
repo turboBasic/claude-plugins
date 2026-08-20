@@ -2,7 +2,7 @@
   "name": "turbobasic",
   "description": "Shared Claude Code skills and agents, grouped by workflow role.",
   "owner": {
-    "name": "turboBasic",
+    "name": "Andrii Melnyk",
     "url": "https://github.com/turboBasic"
   },
   "plugins": [
