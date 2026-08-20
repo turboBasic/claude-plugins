@@ -37,7 +37,12 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
 ## Invariants
 
 - **Plugins group by workflow role, not by tech stack.** A skill that belongs to no role is a sign the
-  role set is wrong, not that a plugin needs a grab bag.
+  role set is wrong, not that a plugin needs a grab bag. **`stacks` is the single exception, taken
+  deliberately:** its skills answer to a tool rather than a role, and the alternatives were a grab-bag
+  role plugin or leaving the copies diverged. It earns the carve-out by being enabled only in the repos
+  holding that tool, which is what "Enable narrowly" asks of any plugin anyway. A stack skill that does
+  fit a role goes to that role; a third that fits none retires the exception, and `stacks` is
+  reconsidered rather than extended.
 - **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
   label scheme — it belongs in that consumer's own `.claude/skills/` instead.
 - **Every plugin entry carries a `version`.** Bump it when a change should reach consumers, not on every
