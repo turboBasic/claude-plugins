@@ -25,6 +25,72 @@
       "name": "stacks",
       "source": "./stacks",
       "description": "Shell scripts laid out top-down, and the AWS CLI held to read-only."
+    },
+    {
+      "name": "1password-docs",
+      "description": "Look up 1Password developer documentation — CLI, SDKs, API, Connect, secrets automation, SSH/Git.",
+      "strict": false,
+      "skills": ["./.claude/skills/1password"],
+      "source": {
+        "source": "url",
+        "url": "https://github.com/turboBasic/1password-doc.git",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "aws-sso-cli-docs",
+      "description": "Look up aws-sso-cli documentation — commands, config, ECS server, troubleshooting.",
+      "strict": false,
+      "skills": ["./.claude/skills/aws-sso-cli"],
+      "source": {
+        "source": "url",
+        "url": "https://github.com/turboBasic/aws-sso-cli-docs.git",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "chezmoi-docs",
+      "description": "Look up chezmoi documentation — commands, templates, scripts, encryption, externals, troubleshooting.",
+      "strict": false,
+      "skills": ["./.claude/skills/chezmoi"],
+      "source": {
+        "source": "url",
+        "url": "https://github.com/turboBasic/chezmoi-doc.git",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "mise-docs",
+      "description": "Look up mise documentation — commands, backends, tasks, environments, hooks, troubleshooting.",
+      "strict": false,
+      "skills": ["./.claude/skills/mise"],
+      "source": {
+        "source": "url",
+        "url": "https://github.com/turboBasic/mise-doc.git",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "uv-docs",
+      "description": "Look up uv documentation — projects, dependencies, Python versions, tools, scripts, the pip interface.",
+      "strict": false,
+      "skills": ["./.claude/skills/uv"],
+      "source": {
+        "source": "url",
+        "url": "https://github.com/turboBasic/uv-doc.git",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "zinit-docs",
+      "description": "Look up zinit documentation — ices, commands, annexes, packages, recipes, troubleshooting.",
+      "strict": false,
+      "skills": ["./.claude/skills/zinit"],
+      "source": {
+        "source": "url",
+        "url": "https://github.com/turboBasic/zinit-doc.git",
+        "ref": "main"
+      }
     }
   ]
 }

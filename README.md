@@ -23,6 +23,13 @@ Or wire it into a repository so it installs on folder trust, with no prompt — 
 A plugin's skills are namespaced, so `/planning:write-plan` never collides with a `write-plan` skill
 the repository defines for itself. Where both exist, the bare `/write-plan` is the repository's.
 
+## Documentation lookups
+
+`1password-docs`, `aws-sso-cli-docs`, `chezmoi-docs`, `mise-docs`, `uv-docs` and `zinit-docs` are not
+held here — each is the documentation repository of that tool, published from where it is edited, and
+each answers to `<plugin>:<tool>` (`/chezmoi-docs:chezmoi`). They carry their own knowledge base, so
+`/plugin marketplace update` is what picks up a documentation change.
+
 ## Work on it
 
 ```sh

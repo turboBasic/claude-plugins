@@ -10,9 +10,15 @@ Work-specific skills live in a separate org-hosted marketplace.
 
 ## Layout
 
-`.claude-plugin/marketplace.json` is the catalog, one entry per plugin, sources relative as
-`./<plugin>`. Inside a plugin only `plugin.json` lives in `.claude-plugin/`; `skills/<name>/SKILL.md`
-and `agents/<name>.md` sit at the plugin root. Kebab-case for every directory and file name.
+`.claude-plugin/marketplace.json` is the catalog, one entry per plugin. A plugin authored here has a
+relative source (`./<plugin>`), holds only `plugin.json` in `.claude-plugin/`, and keeps
+`skills/<name>/SKILL.md` and `agents/<name>.md` at its root. A plugin owned by another repository has
+none of that: it is that repository, sourced whole, and the entry names the skill where it already
+lives — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md). Kebab-case for
+every directory and file name.
+
+`docs/decisions/` holds the records, `NNNN-<slug>.md`, whose `scope:` is one of `marketplace`, `plugin`
+or `tooling`.
 
 ## Consumers
 
@@ -35,16 +41,21 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
 
 ## Invariants
 
-- **Plugins group by workflow role, not by tech stack.** A skill that belongs to no role is a sign the
-  role set is wrong, not that a plugin needs a grab bag. **`stacks` is the deliberate exception:** its
-  skills answer to a tool, and it is enabled only in the repos holding that tool. A stack skill that fits
-  a role goes to that role; a third that fits none retires the exception rather than extending it.
+- **A plugin authored here groups by workflow role, not by tech stack.** A skill that belongs to no role
+  is a sign the role set is wrong, not that a plugin needs a grab bag. **`stacks` is the deliberate
+  exception:** its skills answer to a tool, and it is enabled only in the repos holding that tool. A stack
+  skill that fits a role goes to that role; a third that fits none retires the exception rather than
+  extending it. A plugin owned by another repository is outside this rule rather than an exception to it —
+  it is named for that repository, and nothing here composed it.
 - **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
   label scheme — it belongs in that consumer's own `.claude/skills/` instead.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
   a change should reach consumers, not on every edit.
-- **A plugin whose source is another repository is listed with `git-subdir`, never copied in here**, so
-  that repository stays where it is edited. Pinned to `ref: main`, its commit is the version.
+- **A plugin whose source is another repository is that repository, never copied in here**, so it stays
+  where it is edited: a `url` source over HTTPS at `ref: main`, `strict: false`, naming its skill at
+  `./.claude/skills/<name>`, and carrying no `version` so the resolved commit is the version. Not
+  `git-subdir`, and not a `github` source — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md)
+  rules on why, and an install rather than `mise run ci` is what evidences one.
 - **A citation between two plugins here is namespaced `plugin:name`.**
 - **A fact has one home, and pointers to it never round-trip.**
 - **An agent's `tools:` is an allowlist; a skill's `allowed-tools` is not.** An agent that cites a skill
