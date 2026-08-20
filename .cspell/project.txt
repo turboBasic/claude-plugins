@@ -33,6 +33,10 @@ tamasfe
 taplo
 zinit
 
-# --- Claude Code vocabulary ---
+# --- Vocabulary ---
+frontmatter
 marketplaces
+misordered
+negotiables
+rescope
 subdir

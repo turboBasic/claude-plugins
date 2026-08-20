@@ -6,5 +6,18 @@
   "metadata": {
     "description": "Shared Claude Code skills and agents for turboBasic projects, grouped by workflow role."
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "planning",
+      "source": "./planning",
+      "description": "Plan, issue and decision authoring as architect and product owner.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "review",
+      "source": "./review",
+      "description": "Review as architect, product owner and senior developer.",
+      "version": "0.1.0"
+    }
+  ]
 }

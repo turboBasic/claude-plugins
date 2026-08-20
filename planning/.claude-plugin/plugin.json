@@ -1,0 +1,8 @@
+{
+  "name": "planning",
+  "description": "Plan, issue and decision authoring as architect and product owner — plans whose tasks are one green commit each, issues with acceptance boxes that can fail, records carrying one ruling.",
+  "version": "0.1.0",
+  "author": {
+    "name": "turboBasic"
+  }
+}
