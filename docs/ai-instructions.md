@@ -51,6 +51,8 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   it is named for that repository, and nothing here composed it.
 - **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
   label scheme — it belongs in that consumer's own `.claude/skills/` instead.
+- **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub
+  issues and pull requests, so a repo with no remote enables none of it.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
   a change should reach consumers, not on every edit.
 - **A plugin whose source is another repository is that repository, never copied in here**, so it stays
@@ -58,7 +60,9 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   `./.claude/skills/<name>`, and carrying no `version` so the resolved commit is the version. Not
   `git-subdir`, and not a `github` source — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md)
   rules on why, and an install rather than `mise run ci` is what evidences one.
-- **A citation between two plugins here is namespaced `plugin:name`.**
+- **A citation between two plugins here is namespaced `plugin:name`, and makes the cited plugin a
+  dependency** — a consumer enabling the citing plugin alone gets a dead citation. `planning:run-plan`
+  cites `review:architect`, so **`planning` requires `review`**.
 - **A fact has one home, and pointers to it never round-trip.**
 - **An agent's `tools:` is an allowlist; a skill's `allowed-tools` is not.** An agent that cites a skill
   lists `Skill` or the citation is dead. An unlisted command in a skill still runs, so a prohibition the
