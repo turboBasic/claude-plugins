@@ -58,7 +58,11 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   `./.claude/skills/<name>`, and carrying no `version` so the resolved commit is the version. Not
   `git-subdir`, and not a `github` source — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md)
   rules on why, and an install rather than `mise run ci` is what evidences one.
-- **A citation between two plugins here is namespaced `plugin:name`.**
+- **A citation between two plugins here is namespaced `plugin:name`, and it makes the cited plugin a
+  dependency.** A consumer enabling the citing plugin alone gets a dead citation, so the pairing belongs
+  in the enablement advice rather than being discovered per repo. Live: `planning:run-plan` reviews a
+  phase as `review:architect` and gates phase completion on answering its findings, so **`planning`
+  requires `review`.**
 - **A fact has one home, and pointers to it never round-trip.**
 - **An agent's `tools:` is an allowlist; a skill's `allowed-tools` is not.** An agent that cites a skill
   lists `Skill` or the citation is dead. An unlisted command in a skill still runs, so a prohibition the
