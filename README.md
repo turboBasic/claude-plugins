@@ -9,7 +9,7 @@ claude plugin marketplace add turboBasic/claude-plugins
 claude plugin install planning@turbobasic
 ```
 
-Or wire it into a repository so it installs on folder trust, with no prompt — `.claude/settings.json`:
+Or wire it into a repository — `.claude/settings.json`, naming only the plugins that repository needs:
 
 ```json
 {
@@ -18,6 +18,14 @@ Or wire it into a repository so it installs on folder trust, with no prompt — 
   },
   "enabledPlugins": { "planning@turbobasic": true, "hygiene@turbobasic": true }
 }
+```
+
+**That file is a declaration, not an install.** Since Claude Code 2.1.195 a plugin sourced from another
+repository is fetched but not loaded until someone installs it, so each one needs a single command per
+clone — trusting the folder is not enough:
+
+```sh
+claude plugin install planning@turbobasic --scope project
 ```
 
 A plugin's skills are namespaced, so `/planning:write-plan` never collides with a `write-plan` skill
