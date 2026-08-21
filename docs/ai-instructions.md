@@ -51,6 +51,11 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   it is named for that repository, and nothing here composed it.
 - **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
   label scheme — it belongs in that consumer's own `.claude/skills/` instead.
+- **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub
+  issues and pull requests — `write-plan` starts from an issue and ticks its checkboxes, `write-issue` and
+  `groom-milestone` have no subject without them, and `run-plan` treats the plan file as scratch because
+  the issue is the durable half. **A repo with no remote enables none of it**, and its own skills are not
+  a diverged copy to reconcile but the only ones that fit.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
   a change should reach consumers, not on every edit.
 - **A plugin whose source is another repository is that repository, never copied in here**, so it stays
