@@ -23,7 +23,9 @@ or `tooling`.
 ## Consumers
 
 A consuming repo registers this marketplace in its own `.claude/settings.json` and enables the plugins
-it wants.
+it wants. **That is a declaration, not an install:** since Claude Code 2.1.195 a plugin sourced from
+another repository is fetched but stays unloaded until `claude plugin install <plugin>@turbobasic
+--scope project` runs once per clone, folder trust notwithstanding.
 
 - **Enabling is plugin-level, never skill-level, so enable narrowly.** A repo that wants one skill takes
   the whole plugin, which is why a plugin groups by workflow role and stays small — one or two per repo,
