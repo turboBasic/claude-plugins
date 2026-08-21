@@ -11,9 +11,7 @@ turbobasic
 # --- Repositories and hosts ---
 PopulationCircles
 agentlab
-argocd
 dxc
-moia
 popcircles
 sds
 
