@@ -1,4 +1,5 @@
 {
+  "gitignore": true,
   // MD013 (line length) is off because .editorconfig already declares the limit
   // (max_line_length = 100). MD013 would be a second home for it, at a different number.
   // MD060 (table pipe style) flags the standard unpadded separator row (|---|---|) as
@@ -12,16 +13,24 @@
   // Scoped to that file rather than disabled project-wide.
   "overrides": [
     {
-      "filter": [".github/PULL_REQUEST_TEMPLATE.md"],
-      "config": { "MD041": false },
+      "filter": [
+        ".github/PULL_REQUEST_TEMPLATE.md"
+      ],
+      "config": {
+        "MD041": false
+      },
       "combine": "merge"
     },
     // These two are prompt fragments concatenated around a milestone's PROMPT.md, not documents.
     // They open on a section heading because that is where they land in the assembled prompt; an
     // H1 would put a stray title in the middle of it.
     {
-      "filter": ["scaffold/milestones/agent-rules-*.md"],
-      "config": { "MD041": false },
+      "filter": [
+        "scaffold/milestones/agent-rules-*.md"
+      ],
+      "config": {
+        "MD041": false
+      },
       "combine": "merge"
     }
   ]
