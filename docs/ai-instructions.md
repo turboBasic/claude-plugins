@@ -46,6 +46,11 @@ reason.
 `docs/decisions/` holds the records, `NNNN-<slug>.md`, whose `scope:` is one of `marketplace`, `plugin`
 or `tooling`.
 
+[`docs/technical-debt.md`](technical-debt.md) holds the debt register, `TD-NN` per row. **It is the
+further check this repository declares its own:** a housekeeping sweep evaluates each row's `Due when`
+against the tree and reports the ones that now hold. The register states its own entry rules — an
+obligation that will not reduce to an answerable condition is an issue, not a row.
+
 ## Consumers
 
 A consuming repo registers this marketplace in its own `.claude/settings.json` and enables the plugins
