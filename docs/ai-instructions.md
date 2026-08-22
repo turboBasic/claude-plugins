@@ -17,6 +17,32 @@ none of that: it is that repository, sourced whole, and the entry names the skil
 lives — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md). Kebab-case for
 every directory and file name.
 
+**A command and a skill are different entry points, not alternatives.** A **skill** is matched by the
+model from its `description`, so it suits a procedure that should be reached by intent. A **command** is
+invoked by name by a human, takes `argument-hint` positionals, and is therefore what side-effecting,
+parameterized, long-running work belongs in — nobody wants a project generator firing because a sentence
+sounded relevant. Where a capability wants both, the skill carries the trigger phrases and hands the
+invocation over; **it does not duplicate the procedure**, which stays in one place.
+
+**The two must not share a name.** Within one plugin the command wins the name and the skill **silently
+does not load** — no error, it is simply absent from the skill listing. Measured with `--plugin-dir`
+(2026-08-22): `skills/new-python-project/` alongside `commands/new-python-project.md` was invisible, and
+renaming it to `python-project` made its description appear. Hence `scaffold:python-project` pointing at
+`/scaffold:new-python-project`.
+
+**`scaffold` is the one plugin that is not only prose.** It carries `commands/`, `skills/`, and a Python
+package (`src/`, `tests/`, `scripts/`, `pyproject.toml`, `uv.lock`) that its command runs as
+`uv run --project "$CLAUDE_PLUGIN_DIR" milestone-runner`, so the whole project has to ship inside the
+plugin. That is why this repository executes something at all: `mise run ci` gained `typecheck` and
+`test` scoped to that directory, and `ruff` and `shellcheck` joined the prek hooks. **A plugin that is
+prose adds nothing to the gate** — keep it that way unless a plugin genuinely needs to run.
+
+**A plugin that executes code states the substrate it assumes**, because the manifest declares only the
+declared component types — `hooks`, `mcpServers`, `lspServers`, `monitors`. Code a command shells out to
+is invisible to the host, so a missing toolchain surfaces as a shell error in a consumer's project rather
+than at install time. `scaffold`'s command names `uv`, the Python version and its network need for that
+reason.
+
 `docs/decisions/` holds the records, `NNNN-<slug>.md`, whose `scope:` is one of `marketplace`, `plugin`
 or `tooling`.
 
@@ -48,7 +74,10 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   exception:** its skills answer to a tool, and it is enabled only in the repos holding that tool. A stack
   skill that fits a role goes to that role; a third that fits none retires the exception rather than
   extending it. A plugin owned by another repository is outside this rule rather than an exception to it —
-  it is named for that repository, and nothing here composed it.
+  it is named for that repository, and nothing here composed it. **`scaffold` satisfies the rule rather
+  than bending it:** standing a project up is the role, and it is named for that, not for the one stack it
+  can currently scaffold. A second stack belongs inside it; if its stacks ever stop sharing the
+  milestone-and-verify machinery, that is the sign to split it by role again rather than by language.
 - **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
   label scheme — it belongs in that consumer's own `.claude/skills/` instead.
 - **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub

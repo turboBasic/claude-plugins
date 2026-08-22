@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "milestone-runner"
+version = "0.1.0"
+description = "Drive the modern-python agent one milestone at a time"
+requires-python = ">=3.14"
+dependencies = ["typer>=0.12", "rich>=13", "pydantic>=2", "jinja2>=3"]
+
+[project.scripts]
+milestone-runner = "milestone_runner.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/milestone_runner"]
+
+[dependency-groups]
+dev = ["pytest>=8", "pyright>=1.1", "ruff>=0.4"]
+
+[tool.pyright]
+include = ["src"]
+exclude = ["milestones"]
+typeCheckingMode = "strict"
+
+[tool.ruff]
+src = ["src"]
+line-length = 100
+exclude = ["src/milestone_runner/runner/fsm.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "TCH", "RUF"]
+ignore = [
+  "TC001", # TYPE_CHECKING imports add complexity with no benefit in a CLI tool
+  "TC003", # same — stdlib Path used at runtime in signatures
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/milestone_runner/runner/fsm.py" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

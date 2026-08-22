@@ -7,3 +7,6 @@
 *.yml text
 *.yaml text
 *.sh text eol=lf
+*.py text diff=python
+*.j2 text
+uv.lock text -diff linguist-generated=true

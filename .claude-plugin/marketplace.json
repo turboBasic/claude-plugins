@@ -27,6 +27,11 @@
       "description": "Shell scripts laid out top-down, and the AWS CLI held to read-only."
     },
     {
+      "name": "scaffold",
+      "source": "./scaffold",
+      "description": "Stand a new project up one verified milestone at a time, stopping when a milestone's own check fails."
+    },
+    {
       "name": "1password-docs",
       "description": "Look up 1Password developer documentation — CLI, SDKs, API, Connect, secrets automation, SSH/Git.",
       "strict": false,
