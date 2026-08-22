@@ -37,6 +37,34 @@ repos:
           node -e "const j=require(\"./$p\"); if(!j.name) process.exit(1)"
           || { echo "$p: needs a name."; rc=1; }; done; exit $rc'
 
+      # A plugin's version names its install cache directory,
+      # `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>`, so an edited skill that ships
+      # without a bump keeps serving the copy a consumer already installed — silently, and only on
+      # their machine.
+      # The base is named by the caller, never inferred: "is anything staged" reads the index inside
+      # the gate, where one unrelated staged file flips it. `lint:versions` sets
+      # PLUGIN_VERSION_BASE=origin/main; the commit hook leaves it unset for the index. A base that
+      # does not resolve exits 0, so the gate is silent rather than wrong.
+      # No filenames: the unit is the plugin, and prek splits long filename lists across invocations.
+      - id: plugin-version-bumped
+        name: an edited plugin bumps its version
+        language: system
+        pass_filenames: false
+        always_run: true
+        entry: >-
+          bash -c 'cmp=${PLUGIN_VERSION_BASE:---cached};
+          [ "$cmp" = --cached ] ||
+          git rev-parse --verify -q "$cmp" >/dev/null || exit 0;
+          rc=0;
+          for m in */.claude-plugin/plugin.json; do [ -e "$m" ] || continue;
+          p="${m%%/*}";
+          git diff --quiet "$cmp" -- "$p/skills" "$p/agents" "$p/commands" && continue;
+          git diff "$cmp" -- "$m" | grep -q "^+.*\"version\"" ||
+          { echo "$p: skills, agents or commands changed but $m version did not.
+          Bump it, or consumers keep the cached copy."; rc=1; };
+          done;
+          exit $rc'
+
       # Local and `language: system` so it is the mise-pinned binary rather than a second copy a
       # remote hook would install. No filenames: .taplo.toml decides which TOML is ours.
       - id: taplo-fmt

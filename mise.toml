@@ -36,6 +36,11 @@ run = "prek run --all-files taplo-fmt"
 description = "Check every plugin and marketplace manifest is valid JSON"
 run = "prek run --all-files check-json manifests-well-formed"
 
+[tasks."lint:versions"]
+description = "Check an edited plugin bumped its version against origin/main"
+env = { PLUGIN_VERSION_BASE = "origin/main" }
+run = "prek run --all-files plugin-version-bumped"
+
 [tasks."lint:markdown"]
 description = "Lint Markdown with markdownlint-cli2"
 run = "prek run --all-files markdownlint-cli2"
@@ -57,6 +62,7 @@ description = "Run every linter"
 depends = [
   "lint:format",
   "lint:manifests",
+  "lint:versions",
   "lint:markdown",
   "lint:cspell",
   "lint:shell",
