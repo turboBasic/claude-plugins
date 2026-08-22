@@ -45,7 +45,6 @@ venv
 chezmoi
 commitizen
 cspell
-davidanson
 dotfiles
 jsonc
 markdownlint
@@ -53,9 +52,19 @@ mise
 prek
 pyright
 ruff
-tamasfe
 taplo
 zinit
+
+# --- VS Code publishers, for .vscode/extensions.json ---
+bierner
+charliermarsh
+darkriszty
+davidanson
+esbenp
+hverlin
+tamasfe
+timonwong
+yzhang
 
 # --- Vocabulary ---
 frontmatter
