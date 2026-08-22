@@ -22,6 +22,7 @@ asyncio
 boto
 capsys
 conftest
+docstrings
 dynaconf
 endraw
 httpx
