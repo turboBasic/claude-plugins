@@ -5,6 +5,7 @@ node = "24.19.0"
 "npm:markdownlint-cli2" = "0.23.2"
 prek = "latest"
 python = "3.14"
+shellcheck = "latest"
 taplo = "latest"
 uv = "latest"
 
@@ -43,6 +44,10 @@ run = "prek run --all-files markdownlint-cli2"
 description = "Spell-check every tracked file with cspell"
 run = "prek run --all-files cspell"
 
+[tasks."lint:shell"]
+description = "Lint the scaffold plugin's milestone checks"
+run = "prek run --all-files shellcheck"
+
 [tasks."lint:python"]
 description = "Lint and format-check the scaffold plugin's runner"
 run = "prek run --all-files ruff ruff-format"
@@ -54,6 +59,7 @@ depends = [
   "lint:manifests",
   "lint:markdown",
   "lint:cspell",
+  "lint:shell",
   "lint:python",
 ]
 

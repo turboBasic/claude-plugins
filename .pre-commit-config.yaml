@@ -67,6 +67,14 @@ repos:
         language: system
         types: [markdown]
 
+      # `scaffold/` brought the first shell scripts here — the milestone checks and their shared
+      # library. They gate every generated project, so they are worth linting.
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
+
       # Only `scaffold/` holds Python. Run through uv so the version is the one its pyproject
       # pins, and let scaffold/pyproject.toml own the rule selection.
       - id: ruff

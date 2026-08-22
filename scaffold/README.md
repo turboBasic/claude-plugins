@@ -43,9 +43,9 @@ Loads all context from the saved file. Already-completed milestones are skipped.
 
 ```bash
 cd /path/to/generated-project
-mise exec -- python /path/to/plugin/scripts/log_summary.py
+mise exec -- uv run --project <plugin_dir> milestone-runner log-summary
 # or a specific log file:
-mise exec -- python /path/to/plugin/scripts/log_summary.py agent-20260524T120000.log.jsonl
+mise exec -- uv run --project <plugin_dir> milestone-runner log-summary agent-20260524T120000.log.jsonl
 ```
 
 ## Flags
