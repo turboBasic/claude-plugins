@@ -91,7 +91,10 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   rules on why, and an install rather than `mise run ci` is what evidences one.
 - **A citation between two plugins here is namespaced `plugin:name`, and makes the cited plugin a
   dependency** — a consumer enabling the citing plugin alone gets a dead citation. `planning:run-plan`
-  cites `review:architect`, so **`planning` requires `review`**.
+  cites `review:architect`, so **`planning` requires `review`**. A citation hedged *where the repo enables
+  it* is optional rather than a dependency, and is how `review` cites back into `planning` without making
+  the requirement mutual. A repo wanting `planning` without `review` retires the hedge and reopens the
+  split rather than earning a third one.
 - **A fact has one home, and pointers to it never round-trip.**
 - **An agent's `tools:` is an allowlist; a skill's `allowed-tools` is not.** An agent that cites a skill
   lists `Skill` or the citation is dead. An unlisted command in a skill still runs, so a prohibition the

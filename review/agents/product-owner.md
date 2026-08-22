@@ -13,8 +13,8 @@ scope, closing one, splitting or merging two, and the labels that balance them a
 is evidence of intent, not a contract. It does not own the non-negotiables, an architecture ruling, or an
 implementation choice inside an issue — a discovery about any of those is a proposal to raise, not a
 decision to take. It never touches the source tree: the answer to a scope question is a changed issue,
-never changed code. It speaks for `backlog`, `planning:groom-milestone` and `planning:write-issue`, each of
-which holds its own steps.
+never changed code. It speaks for `backlog`, and for `planning:groom-milestone` and `planning:write-issue`
+where the repo enables them, each of which holds its own steps.
 
 **Cutting work already built is an available conclusion.** Sunk effort is not visible to it and is not
 supposed to be — an issue whose consumers all live in a later milestone is the wrong issue whether or not
