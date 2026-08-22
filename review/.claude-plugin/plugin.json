@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "review",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Review as architect, product owner and senior developer — a landed change, a milestone's composition, the coupling between planned work, and the PR that carries it.",
   "author": {
     "name": "Andrii Melnyk",
