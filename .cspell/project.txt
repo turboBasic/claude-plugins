@@ -15,6 +15,31 @@ dxc
 popcircles
 sds
 
+# --- Python, for the scaffold plugin and the projects it generates ---
+aiohttp
+asynccontextmanager
+asyncio
+boto
+capsys
+conftest
+dynaconf
+endraw
+httpx
+MYAPP
+platformdirs
+pycache
+pydantic
+pyml
+pyproject
+pyrightconfig
+pytest
+respx
+stdlib
+structlog
+testpaths
+typer
+venv
+
 # --- Tooling ---
 chezmoi
 commitizen

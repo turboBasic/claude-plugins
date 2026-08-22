@@ -1,0 +1,4 @@
+# models = ["haiku", "sonnet", "opus"]
+
+# type = "agent"
+type = "generated"

@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@{{ checkout_version }}
+
+      - uses: jdx/mise-action@{{ mise_action_version }}
+
+      - uses: actions/cache@{{ cache_version }}
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-{% raw %}${{ hashFiles('.pre-commit-config.yaml') }}{% endraw %}
+          restore-keys: |
+            pre-commit-
+
+      - name: Run pre-commit on all files (push)
+        if: {% raw %}${{ github.event_name == 'push' }}{% endraw %}
+        run: mise exec -- pre-commit run --all-files
+
+      - uses: tj-actions/changed-files@{{ changed_files_version }}
+        if: {% raw %}${{ github.event_name == 'pull_request' }}{% endraw %}
+        id: changed-files
+
+      - name: Run pre-commit on changed files (pull_request)
+        if: {% raw %}${{ github.event_name == 'pull_request' }}{% endraw %}
+        run: mise exec -- pre-commit run --files {% raw %}${{ steps.changed-files.outputs.all_changed_files }}{% endraw %}
+
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@{{ checkout_version }}
+
+      - uses: jdx/mise-action@{{ mise_action_version }}
+
+      - uses: actions/cache@{{ cache_version }}
+        with:
+          path: ~/.cache/uv
+          key: uv-{% raw %}${{ hashFiles('uv.lock') }}{% endraw %}
+          restore-keys: |
+            uv-
+
+      - name: Type check
+        run: mise exec -- just type-check
+
+      - name: Test
+        run: mise exec -- just test

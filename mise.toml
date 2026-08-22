@@ -4,7 +4,9 @@ node = "24.19.0"
 "npm:cspell-cli" = "10.0.1"
 "npm:markdownlint-cli2" = "0.23.2"
 prek = "latest"
+python = "3.14"
 taplo = "latest"
+uv = "latest"
 
 [tasks.setup]
 description = "Install git hooks"
@@ -41,12 +43,32 @@ run = "prek run --all-files markdownlint-cli2"
 description = "Spell-check every tracked file with cspell"
 run = "prek run --all-files cspell"
 
+[tasks."lint:python"]
+description = "Lint and format-check the scaffold plugin's runner"
+run = "prek run --all-files ruff ruff-format"
+
 [tasks.lint]
 description = "Run every linter"
-depends = ["lint:format", "lint:manifests", "lint:markdown", "lint:cspell"]
+depends = [
+  "lint:format",
+  "lint:manifests",
+  "lint:markdown",
+  "lint:cspell",
+  "lint:python",
+]
 
-# No test task yet: nothing here executes. A skill is prose, and `lint` is the whole gate until
-# a plugin grows a script worth testing.
+# `scaffold` is the reason this repo now executes something. Everything else here is prose, so
+# typecheck and test are scoped to that one plugin rather than the repository.
+[tasks.typecheck]
+description = "Type-check the scaffold plugin's runner (pyright strict)"
+dir = "scaffold"
+run = "uv run pyright"
+
+[tasks.test]
+description = "Run the scaffold plugin's unit tests"
+dir = "scaffold"
+run = "uv run pytest"
+
 [tasks.ci]
 description = "Run everything CI runs, locally"
-depends = ["lint"]
+depends = ["lint", "typecheck", "test"]

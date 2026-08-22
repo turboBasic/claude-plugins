@@ -1,0 +1,14 @@
+install:
+    mise exec -- uv sync --all-groups
+
+lock:
+    mise exec -- uv lock
+
+lint:
+    @echo "run 'just hooks' first to install pre-commit"
+
+test:
+    mise exec -- pytest
+
+type-check:
+    mise exec -- pyright
