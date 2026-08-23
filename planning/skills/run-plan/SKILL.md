@@ -34,8 +34,10 @@ rules add to this loop without replacing it.
    licenses less.
 8. **Land it, then tick the box, before the next task starts.** Settle which branch may receive a commit
    before the run's first one rather than after: `git symbolic-ref refs/remotes/origin/HEAD` names the
-   default branch and `gh api repos/:owner/:repo/branches/<branch>/protection` says whether it is
-   protected. No safe default — absent both, ask. The task's change is one Conventional Commit; the box is
+   default branch, `gh api repos/:owner/:repo/branches/<branch>/protection` says whether it is protected,
+   and `.claude/conventions.json`'s `git.protected_branches` names any the repo keeps off-limits whatever
+   that API reports — an unprotected branch is not thereby a permitted one. No safe default — absent all
+   three, ask. The task's change is one Conventional Commit; the box is
    ticked once that commit exists, never before it and never batched to the phase boundary.
 9. **Take the next unchecked task in the same phase and repeat from step 5.** At the phase boundary,
    stop. Do not roll into the next phase.
