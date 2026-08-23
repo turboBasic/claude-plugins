@@ -8,8 +8,9 @@ description: Author an architecture decision record - the bar first, so the answ
 **Acting as architect.** It owns whether a decision is worth freezing at all, and what the record rules.
 It does not implement: the code that would make the ruling true is a plan's work.
 
-The repo's instruction layer holds the bar a change must clear, the scoping rules and the line ceiling.
-Absent one, the bar is that all three hold — reversing the change costs more than a PR, a competent
+The repo's instruction layer holds the bar a change must clear and the scoping rules; the line ceiling is
+`.claude/conventions.json`'s `adr.line_ceiling` where it is set, since no record can be measured for it.
+Absent those, the bar is that all three hold — reversing the change costs more than a PR, a competent
 person would have chosen differently, and someone will ask "why is it like this?" and not be able to
 answer from the code — and the ceiling is 80 lines including frontmatter. A choice a gate already pins
 needs no record: the gate is the record.
@@ -25,8 +26,9 @@ needs no record: the gate is the record.
    title and the slug. If it needs an "and" joining two independent claims, or the draft starts wanting a
    numbered list, there are two questions here: record the one asked about and name the other for its own
    record.
-3. **Take the next free number** — the lowest unused four-digit prefix in `docs/decisions/`. The filename
-   is that number plus a kebab-case slug of the ruling.
+3. **Take the next free number** — the lowest unused four-digit prefix in the directory the records
+   already sit in, which `rg --files -g '[0-9][0-9][0-9][0-9]-*.md'` names, `docs/decisions/` absent any.
+   The filename is that number plus a kebab-case slug of the ruling.
 4. **Write the frontmatter.**
 
    ```yaml
@@ -39,9 +41,11 @@ needs no record: the gate is the record.
    ---
    ```
 
-   `scope:` takes exactly one value from whatever vocabulary the repo keeps, so a record wanting two
-   values is two records. A ruling no value fits adds one, to that list and in the same change — but
-   check first that the want is not step 2's "and" in disguise. `superseded_by: NNNN` appears only with
+   `scope:` takes exactly one value from the repo's vocabulary, so a record wanting two values is two
+   records. `rg '^scope:'` over that directory is a **floor, not the list** — it returns only what past
+   records happened to use — so widen it with whatever the instruction layer declares before concluding a
+   value is missing. **No default: absent any record and any rule, ask.** A ruling no value fits adds one, to that list and in the same change —
+   but check first that the want is not step 2's "and" in disguise. `superseded_by: NNNN` appears only with
    `status: superseded`; there is no `supersedes:`.
 5. **Fill four sections, in this order,** under an `# ADR NNNN — <ruling>` heading.
    - **Decision.** Two to four sentences, present tense, the rule as it now stands. A reader who stops

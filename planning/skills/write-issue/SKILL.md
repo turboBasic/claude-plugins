@@ -10,7 +10,7 @@ not touch the tree the issue describes. An issue is written, never worked, and n
 of the work — a decision the issue carries is named in it and ruled when the milestone holding it starts.
 
 The repo's instruction layer owns what an issue and an epic each are, and how prose published to GitHub
-is wrapped. Cite it rather than restating it.
+is wrapped. Cite it rather than restating it; absent a rule, the shapes below are the default.
 
 ## Before writing
 
@@ -34,8 +34,8 @@ issue yet: it is a fragment of one, a decision, or a technical-debt entry.
    Where a route would reverse something recorded or ruled, say which.
 5. **Say what the issue is not**, where an adjacent thing would otherwise be assumed in — and name the
    issue or the register entry that holds it.
-6. **Labels** come from the instruction layer's vocabulary, one of each axis it defines; absent one, one
-   area, one `type:`, one `size:`. An epic carries the roadmap label alone.
+6. **Labels** come from `gh label list`, one of each axis it defines. Where it defines none, the
+   instruction layer's, else one area, one `type:`, one `size:`. An epic carries the roadmap label alone.
 7. **Wire the relationships**: the parent through `issues/<n>/sub_issues`, blocking through
    `issues/<n>/dependencies/blocked_by` — both by numeric id, per `groom-milestone` "GitHub mechanics".
    No `- Blocked by:` line in a body. `- Relates to:` stays prose. A section holding

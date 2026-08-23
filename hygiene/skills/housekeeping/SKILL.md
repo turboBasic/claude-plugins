@@ -12,16 +12,16 @@ Run every check even when an earlier one fails: a broken gate says nothing about
 
 ## Checks
 
-1. **Gates.** Run the repo's own gate, named by its instruction layer; absent a rule, the task runner's
-   `ci` target, else its `lint` target, else the hook runner across all files. Each failure is a finding,
+1. **Gates.** Run the repo's own gate, which `just --list` and `mise tasks` name. Each failure is a
+   finding,
    quoted with the file and line the tool printed. A hook that rewrites a file is a finding too — the
    rewrite is drift that was sitting in the tree, even though the hook repaired it.
 2. **Duplication.** `hygiene:update-docs` owns the one-owner rule and the test for a repeat; this check
    applies them wider than the docs, across the live Markdown of the instruction layer, `.claude/skills/`,
    `.claude/agents/`, the pointer files under `.github/`, and the human-facing layer. Report, never edit.
-3. **Stale permissions.** `.claude/settings.json` and `.claude/settings.local.json` name permission rules
-   by path and command name; the user-level file is out of scope. A rule naming a task, skill, script or
-   file that no longer exists is a finding. Glob patterns covering a directory are not — they age fine.
+3. **Stale permissions.** Every `.claude/settings*.json` in the repo names permission rules by path and
+   command name; the user-level file is out of scope. A rule naming a task, skill, script or file that no
+   longer exists is a finding. Glob patterns covering a directory are not — they age fine.
 4. **What the repo declares its own.** The instruction layer names any further check this sweep owes it —
    a structure tree against the filesystem, a debt register against its conditions, a sync state against
    its staleness window. Run each as written there and report it beside the rest.

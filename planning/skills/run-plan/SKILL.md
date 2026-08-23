@@ -9,13 +9,13 @@ description: Execute one phase of a scratch implementation plan, each task verif
 role believes wrong goes back to the architect who wrote it.
 
 The plan file is scratch — the commit and the issue checkbox are the durable half, so a ticked box is a
-note to this session. The repo's instruction layer owns what a plan file contains and where it lives; a
-plan's own ground rules add to this loop without replacing it.
+note to this session. `write-plan` owns what a plan file contains and where it lives; a plan's own ground
+rules add to this loop without replacing it.
 
 ## Steps
 
-1. **Locate the plan.** Resolve the number, slug or description against the plan files in the directory
-   the instruction layer names, `tmp/` absent a rule. More than one match: ask.
+1. **Locate the plan** in the directory `write-plan` resolves, and match the number, slug or description
+   against what is there. More than one match: ask.
 2. **Read the status line first.** A plan marked complete is frozen — say so and stop.
 3. **Settle the scope before the first task, never during.** The default is the phase holding the first
    unchecked task, run to its end. Ask up front where the request reads narrower or wider — a scope
@@ -27,21 +27,27 @@ plan's own ground rules add to this loop without replacing it.
    or superseded, that ends the run: report it and ask. Do not rescope it and do not step over it.
 6. **Verify** exactly what the `Verify:` line asks and nothing less. A `Verify:` naming a command means
    running it, not reasoning about what it would print.
-7. **Run the gates** the repo defines — `prek run --all-files`, then `mise run ci`, where that is what
-   they are — and fix what fails. Stage new files first: `prek` reads tracked files only, so a run that
-   passes over an untracked file has checked nothing. Re-stage what a hook reformats and re-run. A
-   `Verify:` line may ask for less than every gate; it never licenses less.
-8. **Land it, then tick the box, before the next task starts.** Read what the instruction layer says
-   about git before the run's first commit rather than after — it constrains which branch may receive
-   one. The task's change is one Conventional Commit; the box is ticked once that commit exists, never
-   before it and never batched to the phase boundary.
+7. **Run the gates the repo defines**, and fix what fails. `just --list` and `mise tasks` name them — a
+   `ci` target, else `lint`, else the hook runner across all files. Stage new files first, since a hook
+   runner reads tracked files only, so a run that passes over an untracked file has checked nothing.
+   Re-stage what a hook reformats and re-run. A `Verify:` line may ask for less than every gate; it never
+   licenses less.
+8. **Land it, then tick the box, before the next task starts.** Settle which branch may receive a commit
+   before the run's first one rather than after: `git symbolic-ref refs/remotes/origin/HEAD` names the
+   default branch, and `gh api repos/:owner/:repo/rules/branches/<branch>` lists the rules in force — use
+   that rather than `branches/<branch>/protection`, which sees only legacy protection and so returns 404
+   for a branch a ruleset protects, and needs admin to read at all. Rules are enforcement, not policy, so
+   `.claude/conventions.json`'s `git.protected_branches` names any branch the repo keeps off-limits
+   unenforced: an unprotected branch is not thereby a permitted one. No safe default — absent all three,
+   ask. The task's change is one Conventional Commit; the box is
+   ticked once that commit exists, never before it and never batched to the phase boundary.
 9. **Take the next unchecked task in the same phase and repeat from step 5.** At the phase boundary,
    stop. Do not roll into the next phase.
 10. **Review the phase's commits as the `review:architect` agent**, with the `review:change` skill
     where the repo enables it. The brief is a run-plan phase and the tasks it landed; `review:change`
     "What the brief may say, and what it may not" owns the rest of it. Once for the phase, not per task.
     A finding obliges one of three answers: a further commit inside this phase, a task appended to the
-    next phase, or a debt entry. Ticked boxes stay ticked.
+    next phase, or a debt entry per `write-plan` step 8. Ticked boxes stay ticked.
 11. **Report** the tasks that landed, what the review found and how each finding was answered, and what
     the next phase holds. The phase is not complete until every finding has one of those three answers or
     the owner overrides it.
