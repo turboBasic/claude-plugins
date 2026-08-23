@@ -84,7 +84,9 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   can currently scaffold. A second stack belongs inside it; if its stacks ever stop sharing the
   milestone-and-verify machinery, that is the sign to split it by role again rather than by language.
 - **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
-  label scheme — it belongs in that consumer's own `.claude/skills/` instead.
+  label scheme — it belongs in that consumer's own `.claude/skills/` instead. **A skill with no consuming
+  repo at all goes to `~/.claude/skills/`, not into a plugin** — being generic has nowhere to point once
+  there is no caller's instruction layer to defer to.
 - **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub
   issues and pull requests, so a repo with no remote enables none of it.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
