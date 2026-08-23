@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "scaffold",
-  "version": "0.3.0",
-  "description": "Stand a new project up one verified milestone at a time — scaffold, hooks, CI, config, HTTP, AWS, tests — driven by an agent that stops when a milestone's own check fails.",
+  "version": "0.4.0",
+  "description": "The toolchain a modern Python project starts from — uv, hatchling, ruff, Pyright and the runtime libraries that go with them.",
   "author": {
     "name": "Andrii Melnyk",
     "url": "https://github.com/turboBasic"

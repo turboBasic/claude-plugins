@@ -1,2 +1,0 @@
-models = ["haiku", "sonnet", "opus"]
-optional = true

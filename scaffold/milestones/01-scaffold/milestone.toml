@@ -1,5 +1,0 @@
-# models = ["haiku", "sonnet", "opus"]
-models = ["sonnet", "opus"]
-
-type = "agent"
-# type = "generated"
