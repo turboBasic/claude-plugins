@@ -1,17 +1,14 @@
 {
   "recommendations": [
     "bierner.github-markdown-preview",
-    "charliermarsh.ruff",
     "darkriszty.markdown-table-prettify",
     "davidanson.vscode-markdownlint",
     "editorconfig.editorconfig",
     "hverlin.mise-vscode",
-    "ms-python.python",
     "redhat.vscode-yaml",
     "streetsidesoftware.code-spell-checker",
     "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries",
-    "tamasfe.even-better-toml",
-    "timonwong.shellcheck"
+    "tamasfe.even-better-toml"
   ],
   "unwantedRecommendations": [
     "esbenp.prettier-vscode",

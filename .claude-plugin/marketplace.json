@@ -29,7 +29,7 @@
     {
       "name": "scaffold",
       "source": "./scaffold",
-      "description": "Stand a new project up one verified milestone at a time, stopping when a milestone's own check fails."
+      "description": "The toolchain a modern Python project starts from — uv, hatchling, ruff, Pyright and the runtime libraries that go with them."
     },
     {
       "name": "1password-docs",

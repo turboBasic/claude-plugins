@@ -15,31 +15,16 @@ dxc
 popcircles
 sds
 
-# --- Python, for the scaffold plugin and the projects it generates ---
-aiohttp
-asynccontextmanager
-asyncio
+# --- Python, for the modern-python skill ---
 boto
-capsys
-conftest
-docstrings
 dynaconf
-endraw
 httpx
-MYAPP
-platformdirs
-pycache
+isort
 pydantic
-pyml
-pyproject
-pyrightconfig
-pytest
-respx
-stdlib
+pylint
 structlog
-testpaths
 typer
-venv
+virtualenv
 
 # --- Tooling ---
 chezmoi
@@ -57,13 +42,11 @@ zinit
 
 # --- VS Code publishers, for .vscode/extensions.json ---
 bierner
-charliermarsh
 darkriszty
 davidanson
 esbenp
 hverlin
 tamasfe
-timonwong
 yzhang
 
 # --- Vocabulary ---
