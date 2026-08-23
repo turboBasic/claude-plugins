@@ -7,7 +7,9 @@ description: Author a scratch implementation plan whose tasks are one green comm
 
 **Acting as architect.** It owns the plan, never the tree the plan is written against.
 
-The repo's instruction layer fixes where a plan file lives and what shape it carries. Absent one:
+Where a plan file lives: `rg --files -g '*.plan.md'` for the directory plans already use, else
+`.claude/conventions.json`'s `plan.dir`, else the instruction layer. The shape is this skill's, not read
+off anything. Absent a directory from all three:
 `tmp/<slug>.plan.md`, gitignored and never committed, no frontmatter, with a **Status line** directly
 under the title reading `**Status: in progress (YYYY-MM-DD).**` or `**Status: complete (YYYY-MM-DD).**`;
 **Ground rules**; **Out of scope**; **Phases** grouping tasks, optionally carrying a `Model:` note;
@@ -43,10 +45,11 @@ committed.
    carries the reason it lost.
 8. **Make the last task land what outlives the file.** The issue's checkboxes and the epic's box ticked,
    the status line set to complete with the date, and every remaining obligation given a home: an issue
-   where it is work someone will do, the technical-debt register where it states a condition the
-   repository can answer. The Technical debt section then names the identifiers of whatever entries
-   exist, and says so when there are none. Ask where the shape is genuinely unclear rather than forcing
-   an entry no sweep can evaluate.
+   where it is work someone will do, the technical-debt register — the one `rg --files -g '*technical-debt*'`
+   finds, which locates an empty register as well as a populated one — where it states a condition the
+   repository can answer. No register found: say so and ask rather than starting one. The Technical debt section then names the identifiers of whatever entries exist, and says so when
+   there are none. Ask where the shape is genuinely unclear rather than forcing an entry no sweep can
+   evaluate.
 
 ## Judgment
 
