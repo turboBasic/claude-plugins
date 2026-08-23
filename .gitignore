@@ -3,12 +3,5 @@ tmp/
 .DS_Store
 node_modules/
 
-# Python — only scaffold/ has any.
-.venv/
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.ruff_cache/
-
 # Per-developer permission allowlist.
 .claude/settings.local.json
