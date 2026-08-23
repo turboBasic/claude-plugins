@@ -85,6 +85,12 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   has nowhere to point once there is no caller's instruction layer to defer to. A skill that defers
   nothing is outside that rule: it states a stance rather than reading a fact, so it needs no caller and
   may ship with no consumer, and a repo that disagrees shadows it per **Consumers** above.
+- **A deferred fact is resolved by observation before declaration.** A skill needing a consumer fact reads
+  the artefact that owns it by a command the skill names, then a key in an optional
+  `.claude/conventions.json`, then its own stated default, then asks — and where the fact has no safe
+  default it names which of those answered. **Naming a command or a key is not naming one consumer's
+  convention; naming the value is** —
+  [ADR 0002](decisions/0002-a-consumer-fact-is-resolved-by-observation-before-declaration.md).
 - **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub
   issues and pull requests, so a repo with no remote enables none of it.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
