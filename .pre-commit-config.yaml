@@ -41,10 +41,13 @@ repos:
       # `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>`, so an edited skill that ships
       # without a bump keeps serving the copy a consumer already installed — silently, and only on
       # their machine.
-      # The base is named by the caller, never inferred: "is anything staged" reads the index inside
-      # the gate, where one unrelated staged file flips it. `lint:versions` sets
-      # PLUGIN_VERSION_BASE=origin/main; the commit hook leaves it unset for the index. A base that
-      # does not resolve exits 0, so the gate is silent rather than wrong.
+      # The base is the release boundary, not the previous commit: what reaches a consumer is the
+      # branch, so one bump per branch is what the cache needs. Comparing against the index instead
+      # charged a bump per commit, which on a branch that already bumped is version churn nothing
+      # ships. Default is the merge base with origin/main; `lint:versions` names origin/main
+      # explicitly. The merge base is inferred from refs alone, never from what happens to be
+      # staged. No remote, or a base that does not resolve, falls back to HEAD — the old
+      # index-versus-HEAD behaviour — so the gate is silent rather than wrong.
       # No filenames: the unit is the plugin, and prek splits long filename lists across invocations.
       - id: plugin-version-bumped
         name: an edited plugin bumps its version
@@ -52,15 +55,16 @@ repos:
         pass_filenames: false
         always_run: true
         entry: >-
-          bash -c 'cmp=${PLUGIN_VERSION_BASE:---cached};
-          [ "$cmp" = --cached ] ||
+          bash -c 'cmp=${PLUGIN_VERSION_BASE:-};
+          [ -n "$cmp" ] || cmp=$(git merge-base HEAD origin/main 2>/dev/null);
+          [ -n "$cmp" ] || cmp=HEAD;
           git rev-parse --verify -q "$cmp" >/dev/null || exit 0;
           rc=0;
           for m in */.claude-plugin/plugin.json; do [ -e "$m" ] || continue;
           p="${m%%/*}";
-          git diff --quiet "$cmp" -- "$p/skills" "$p/agents" "$p/commands" && continue;
-          git diff "$cmp" -- "$m" | grep -q "^+.*\"version\"" ||
-          { echo "$p: skills, agents or commands changed but $m version did not.
+          git diff --cached --quiet "$cmp" -- "$p/skills" "$p/agents" "$p/commands" && continue;
+          git diff --cached "$cmp" -- "$m" | grep -q "^+.*\"version\"" ||
+          { echo "$p: skills, agents or commands changed against $cmp but $m version did not.
           Bump it, or consumers keep the cached copy."; rc=1; };
           done;
           exit $rc'
