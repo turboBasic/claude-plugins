@@ -22,7 +22,6 @@ httpx
 isort
 pydantic
 pylint
-pyproject
 structlog
 typer
 virtualenv

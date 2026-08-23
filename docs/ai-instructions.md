@@ -26,22 +26,18 @@ invocation over; **it does not duplicate the procedure**, which stays in one pla
 
 **The two must not share a name.** Within one plugin the command wins the name and the skill **silently
 does not load** — no error, it is simply absent from the skill listing. Measured with `--plugin-dir`
-(2026-08-22): `skills/new-python-project/` alongside `commands/new-python-project.md` was invisible, and
-renaming it to `python-project` made its description appear. Hence `scaffold:python-project` pointing at
-`/scaffold:new-python-project`.
+(2026-08-22), on a command and a skill then both named `new-python-project`: the skill was invisible, and
+renaming it made its description appear.
 
-**`scaffold` is the one plugin that is not only prose.** It carries `commands/`, `skills/`, and a Python
-package (`src/`, `tests/`, `scripts/`, `pyproject.toml`, `uv.lock`) that its command runs as
-`uv run --project "$CLAUDE_PLUGIN_DIR" milestone-runner`, so the whole project has to ship inside the
-plugin. That is why this repository executes something at all: `mise run ci` gained `typecheck` and
-`test` scoped to that directory, and `ruff` and `shellcheck` joined the prek hooks. **A plugin that is
-prose adds nothing to the gate** — keep it that way unless a plugin genuinely needs to run.
+**Every plugin here is prose.** The gate reads files and runs nothing a plugin ships, which is why it
+holds no typecheck, no test and no language linter. **Keep it that way unless a plugin genuinely needs to
+run** — the first one that does brings its whole project inside the plugin directory, and brings those
+checks back with it.
 
 **A plugin that executes code states the substrate it assumes**, because the manifest declares only the
 declared component types — `hooks`, `mcpServers`, `lspServers`, `monitors`. Code a command shells out to
 is invisible to the host, so a missing toolchain surfaces as a shell error in a consumer's project rather
-than at install time. `scaffold`'s command names `uv`, the Python version and its network need for that
-reason.
+than at install time, and naming it is the only warning a consumer gets.
 
 `docs/decisions/` holds the records, `NNNN-<slug>.md`, whose `scope:` is one of `marketplace`, `plugin`
 or `tooling`.
@@ -80,13 +76,15 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   skill that fits a role goes to that role; a third that fits none retires the exception rather than
   extending it. A plugin owned by another repository is outside this rule rather than an exception to it —
   it is named for that repository, and nothing here composed it. **`scaffold` satisfies the rule rather
-  than bending it:** standing a project up is the role, and it is named for that, not for the one stack it
-  can currently scaffold. A second stack belongs inside it; if its stacks ever stop sharing the
-  milestone-and-verify machinery, that is the sign to split it by role again rather than by language.
+  than bending it:** standing a project up is the role, and it is named for that rather than for the one
+  stack whose toolchain it currently states. A second stack joins it; if its stacks ever stop sharing that
+  role, that is the sign to split it by role again rather than by language.
 - **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
-  label scheme — it belongs in that consumer's own `.claude/skills/` instead. **A skill with no consuming
-  repo at all goes to `~/.claude/skills/`, not into a plugin** — being generic has nowhere to point once
-  there is no caller's instruction layer to defer to.
+  label scheme — it belongs in that consumer's own `.claude/skills/` instead. **A skill that defers a
+  consumer fact and has no consuming repo goes to `~/.claude/skills/`, not into a plugin** — being generic
+  has nowhere to point once there is no caller's instruction layer to defer to. A skill that defers
+  nothing is outside that rule: it states a stance rather than reading a fact, so it needs no caller and
+  may ship with no consumer, and a repo that disagrees shadows it per **Consumers** above.
 - **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub
   issues and pull requests, so a repo with no remote enables none of it.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
