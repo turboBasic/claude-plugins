@@ -11,10 +11,11 @@ tags: [adr]
 ## Decision
 
 A plugin skill needing a consumer-specific fact takes the first answer of four rungs, in order: the
-artefact in the consumer's repository that already owns the fact, read by a command the skill
-names; a key in an optional `.claude/conventions.json`; the default the skill itself states; and
-asking. Where the fact has no safe default, the skill names which rung answered it. A fact reaching
-the fourth rung where nobody can be asked stops the run rather than defaulting.
+artefact in the consumer's repository that already owns the fact, read by a command the skill names;
+the consumer's **declaration** of it — a key in an optional `.claude/conventions.json`, or the fact
+where their instruction layer already states it; the default the skill itself states; and asking.
+Where the fact has no safe default, the skill names which rung answered it. A fact reaching the
+fourth rung where nobody can be asked stops the run rather than defaulting.
 
 **First answer wins for a location or an existing value; for a vocabulary or a limit the artefact is
 a floor** — what a repository has used is not what it permits, so later rungs widen it, not skip it.
@@ -46,12 +47,11 @@ call rather than describing it — and was never stated as the rule.
 - Adopted despite: four rungs are more to author per fact than one lookup.
 - Adopted despite: rung 1 spends a command per fact where prose spends nothing.
 
-### Assertive sections in `docs/ai-instructions.md`
+### A required assertive form in `docs/ai-instructions.md`
 
-- Rejected because: prose then owns a value an artefact owns, which `update-docs` forbids.
-- Rejected because: the section is read only where the consumer's `CLAUDE.md` references the file.
 - Rejected because: a fixed prose form is a structure, and structure is what cannot be enforced.
-- Rejected despite: no new file in a consumer's tree, and one place for a reader to consult.
+- Rejected because: prose would then own a value an artefact owns, which `update-docs` forbids.
+- Rejected despite: prose is rung 2 where it states the fact — what loses is requiring a form.
 
 ### `repo.toml` as the only channel, ahead of observation
 
