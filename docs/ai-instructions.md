@@ -65,7 +65,10 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
 ## Invariants
 
 - **A plugin authored here groups by workflow role, not by tech stack.** A skill that belongs to no role
-  is a sign the role set is wrong, not that a plugin needs a grab bag. **`stacks` is the deliberate
+  is a sign the role set is wrong, not that a plugin needs a grab bag. **A role may span a loop rather
+  than a single verb**: `planning` holds authoring, execution and review together, because the personas
+  hand work to each other inside one plan and a phase is reviewed before the next one starts. **`stacks`
+  is the deliberate
   exception:** its skills answer to a tool, and it is enabled only in the repos holding that tool. A stack
   skill that fits a role goes to that role; a third that fits none retires the exception rather than
   extending it. **`scaffold` is a role** — standing a project up — so a second stack's toolchain joins it
@@ -99,11 +102,10 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   `git-subdir`, and not a `github` source — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md)
   rules on why, and an install rather than `mise run ci` is what evidences one.
 - **A citation between two plugins here is namespaced `plugin:name`, and makes the cited plugin a
-  dependency** — a consumer enabling the citing plugin alone gets a dead citation. `planning:run-plan`
-  cites `review:architect`, so **`planning` requires `review`**. A citation hedged *where the repo enables
-  it* is optional rather than a dependency, and is how `review` cites back into `planning` without making
-  the requirement mutual. A repo wanting `planning` without `review` retires the hedge and reopens the
-  split rather than earning a third one.
+  dependency** — a consumer enabling the citing plugin alone gets a dead citation. A citation hedged
+  *where the repo enables it* is optional rather than a dependency. **No pair here carries one**: the two
+  plugins that cited each other were merged instead, so a namespaced citation added now declares a
+  dependency rather than inheriting one, and a citation inside a plugin stays bare.
 - **A fact has one home, and pointers to it never round-trip.**
 - **An agent's `tools:` is an allowlist; a skill's `allowed-tools` is not.** An agent that cites a skill
   lists `Skill` or the citation is dead. An unlisted command in a skill still runs, so a prohibition the
