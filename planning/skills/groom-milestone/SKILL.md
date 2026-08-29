@@ -8,10 +8,8 @@ description: Execute a backlog reading as product owner - move, split, cut, resi
 **Acting as product owner.** It owns a milestone's composition and an issue's scope, and it never touches
 the source tree: a milestone is reshaped by changing issues, never the code they describe.
 
-**This skill executes a reading; it does not produce one.** The reading is `review-backlog`'s: a
-deliverable stated as one sentence about a person, and a keep, cut, split or resize answer per issue.
-Invoke that skill first where one is not in hand; where the owner has ruled, execute the ruling rather
-than re-deriving it.
+**This skill executes a reading; it does not produce one.** `review-backlog` owns the reading's shape;
+invoke it where one is not in hand, and execute the owner's ruling rather than re-deriving it.
 
 ## Executing
 
@@ -51,10 +49,8 @@ Read a raw body with `gh issue view <n> --json body -q .body`; write one from a 
 - **Delete:** milestone moves, "the link was dead", "renamed to", any before-and-after account of how an
   issue changed. `git log` and the body's current state own that.
 - **Keep:** a scope cut, a measured figure, a dependency order, a draft artefact, a ruling and what lost
-  to it.
+  to it, an answer to a scope proposal above it — unanswered, the proposal reads as still open.
 - **Trim rather than delete** where a real kernel sits wrapped in that narration.
-- A comment answering a scope proposal above it earns its place: without one, nobody can tell whether the
-  proposal was adopted or is still open.
 
 ## Executing a renumber
 
@@ -65,7 +61,6 @@ Read a raw body with `gh issue view <n> --json body -q .body`; write one from a 
   so in the epic body rather than leaving the mismatch unexplained.
 - **Re-parent sub-issues explicitly.** An issue holds one parent, so the attach is refused unless the old
   link goes first — either detach then attach, or pass `-F replace_parent=true` on the attach.
-- **Sweep for pointers to anything deleted.** A comment whose whole content was a link to a deleted
-  comment is now noise itself.
+- **Sweep for pointers to anything deleted** — a comment that was only that link goes too.
 - **Repoint the dependency graph out of a closed issue** before finishing. An issue closed as superseded
   never closes as done, so a dependency on it blocks its successors for good.
