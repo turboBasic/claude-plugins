@@ -60,6 +60,7 @@ rulesets
 
 # --- Vocabulary ---
 frontmatter
+idempotently
 marketplaces
 misordered
 negotiables
