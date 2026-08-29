@@ -95,7 +95,9 @@ def desired_ruleset(status_checks=()):
         "conditions": {"ref_name": {"include": ["~DEFAULT_BRANCH"], "exclude": []}},
         # RepositoryRole 5 is the repository admin. Without the bypass, required linear history
         # locks the sole owner out of the force-push that produces it.
-        "bypass_actors": [{"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}],
+        "bypass_actors": [
+            {"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}
+        ],
         "rules": rules,
     }
 
@@ -111,7 +113,10 @@ def ruleset_shape(ruleset):
             for a in ruleset.get("bypass_actors") or []
         ],
         "rules": sorted(
-            ({"type": r["type"], "parameters": r.get("parameters")} for r in ruleset["rules"]),
+            (
+                {"type": r["type"], "parameters": r.get("parameters")}
+                for r in ruleset["rules"]
+            ),
             key=lambda r: r["type"],
         ),
     }
@@ -172,7 +177,11 @@ def apply(args):
     current = dict(repo)
     if security:
         current["security_and_analysis"] = {
-            k: {"status": (repo.get("security_and_analysis") or {}).get(k, {}).get("status")}
+            k: {
+                "status": (repo.get("security_and_analysis") or {})
+                .get(k, {})
+                .get("status")
+            }
             for k in security
         }
     changes = diff(current, settings)
@@ -186,7 +195,9 @@ def apply(args):
 
     alerts = gh(f"repos/{slug}/vulnerability-alerts", allow_fail=True) is not None
     fixes = bool(
-        (gh(f"repos/{slug}/automated-security-fixes", allow_fail=True) or {}).get("enabled")
+        (gh(f"repos/{slug}/automated-security-fixes", allow_fail=True) or {}).get(
+            "enabled"
+        )
     )
 
     want_ruleset = desired_ruleset(args.status_check)
@@ -196,7 +207,9 @@ def apply(args):
     ruleset_state = "absent"
     if existing:
         full = gh(f"repos/{slug}/rulesets/{existing['id']}")
-        ruleset_state = "current" if ruleset_shape(full) == ruleset_shape(want_ruleset) else "stale"
+        ruleset_state = (
+            "current" if ruleset_shape(full) == ruleset_shape(want_ruleset) else "stale"
+        )
 
     print(slug)
     report(changes)
@@ -208,7 +221,12 @@ def apply(args):
         report({"automated_security_fixes": (False, True)})
     if ruleset_state != "current":
         report({"ruleset": (ruleset_state, RULESET_NAME)})
-    pending = bool(changes or topic_change) or not alerts or not fixes or ruleset_state != "current"
+    pending = (
+        bool(changes or topic_change)
+        or not alerts
+        or not fixes
+        or ruleset_state != "current"
+    )
     if not pending:
         print("  nothing to change")
         return
@@ -254,7 +272,9 @@ def self_check():
     assert solo["bypass_actors"][0]["actor_id"] == 5
     checked = desired_ruleset(["CI"])
     assert len(checked["rules"]) == 4
-    assert checked["rules"][3]["parameters"]["required_status_checks"] == [{"context": "CI"}]
+    assert checked["rules"][3]["parameters"]["required_status_checks"] == [
+        {"context": "CI"}
+    ]
 
     # An unset homepage arrives as "" from the API and None from the baseline: not a change.
     assert diff({"homepage": ""}, {"homepage": None}) == {}
@@ -270,16 +290,30 @@ def self_check():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Apply the GitHub repository baseline.")
+    parser = argparse.ArgumentParser(
+        description="Apply the GitHub repository baseline."
+    )
     parser.add_argument("target", nargs="?", help="<name> or <owner>/<name>")
-    parser.add_argument("--create", action="store_true", help="create it if it does not exist")
-    parser.add_argument("--public", action="store_true", help="create it public; default private")
+    parser.add_argument(
+        "--create", action="store_true", help="create it if it does not exist"
+    )
+    parser.add_argument(
+        "--public", action="store_true", help="create it public; default private"
+    )
     parser.add_argument("--description")
     parser.add_argument("--homepage")
-    parser.add_argument("--topic", action="append", default=[], help="repeatable; replaces the set")
-    parser.add_argument("--status-check", action="append", default=[], help="repeatable check name")
-    parser.add_argument("--dry-run", action="store_true", help="report the diff, write nothing")
-    parser.add_argument("--self-check", action="store_true", help="assert over the pure builders")
+    parser.add_argument(
+        "--topic", action="append", default=[], help="repeatable; replaces the set"
+    )
+    parser.add_argument(
+        "--status-check", action="append", default=[], help="repeatable check name"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="report the diff, write nothing"
+    )
+    parser.add_argument(
+        "--self-check", action="store_true", help="assert over the pure builders"
+    )
     args = parser.parse_args()
 
     if args.self_check:

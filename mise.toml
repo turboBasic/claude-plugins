@@ -46,6 +46,10 @@ run = "prek run --all-files markdownlint-cli2"
 description = "Spell-check every tracked file with cspell"
 run = "prek run --all-files cspell"
 
+[tasks."lint:python"]
+description = "Lint and format-check Python, and run the shipped script's self-check"
+run = "prek run --all-files ruff-check ruff-format repo-settings-self-check"
+
 [tasks.lint]
 description = "Run every linter"
 depends = [
@@ -54,9 +58,11 @@ depends = [
   "lint:versions",
   "lint:markdown",
   "lint:cspell",
+  "lint:python",
 ]
 
-# Every plugin here is prose, so the gate reads files and runs nothing the plugins ship.
+# Almost every plugin here is prose. The exception is the one script ADR 0002 allows, whose
+# --self-check `lint:python` runs — so the gate is no longer only a reader.
 [tasks.ci]
 description = "Run everything CI runs, locally"
 depends = ["lint"]

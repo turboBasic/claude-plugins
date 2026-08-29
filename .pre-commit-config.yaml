@@ -18,6 +18,17 @@ repos:
       - id: commitizen
         stages: [commit-msg]
 
+  # types_or is overridden on both: upstream's ruff-format also claims `markdown`, which would let a
+  # Python formatter rewrite the fenced blocks in every skill and record here. No args, so the line
+  # width is ruff's own 88 — under .editorconfig's 100, which stays the only place that number lives.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.5
+    hooks:
+      - id: ruff-check
+        types_or: [python]
+      - id: ruff-format
+        types_or: [python]
+
   - repo: local
     hooks:
       # check-json above proves the manifests parse; this proves the two that decide whether the
@@ -91,6 +102,16 @@ repos:
           - --no-summary
           - --gitignore
           - --files
+
+      # The one check that runs something this repository ships, per ADR 0002. `ruff` proves the
+      # script parses; only this proves the nine API payloads it builds are still the intended ones.
+      # `files:` keeps it off every run that does not touch the script.
+      - id: repo-settings-self-check
+        name: the scaffold baseline script self-checks
+        entry: python3 scaffold/scripts/repo_settings.py --self-check
+        language: system
+        files: ^scaffold/scripts/
+        pass_filenames: false
 
       # `.markdownlint-cli2.jsonc` owns which files and rules apply, so no args are needed here.
       - id: markdownlint-cli2
