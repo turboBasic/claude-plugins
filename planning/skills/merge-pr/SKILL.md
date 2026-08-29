@@ -2,7 +2,6 @@
 name: merge-pr
 description: Merge the open pull request for the current branch through GitHub with gh, squashing by default or rebasing on request. Use when asked to merge, squash-merge, rebase-merge or land a PR.
 argument-hint: [squashing|rebasing all commits as is]
-user-invocable: true
 model: sonnet
 allowed-tools: Bash(git log:*), Bash(git diff:*), Bash(gh pr view:*), Bash(gh pr merge:*)
 ---
