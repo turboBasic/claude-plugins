@@ -32,14 +32,14 @@ rules add to this loop without replacing it.
    runner reads tracked files only, so a run that passes over an untracked file has checked nothing.
    Re-stage what a hook reformats and re-run. A `Verify:` line may ask for less than every gate; it never
    licenses less.
-8. **Land it, then tick the box, before the next task starts.** Settle which branch may receive a
-   commit before the run's first one: `git symbolic-ref refs/remotes/origin/HEAD` names the default
-   branch and `gh api repos/:owner/:repo/rules/branches/<branch>` the rules in force — not
-   `branches/<branch>/protection`, whose 404 means a ruleset it cannot see, never an unprotected
-   branch. Rules are enforcement, not policy, so `.claude/conventions.json`'s `git.protected_branches`
-   names a branch kept off-limits unenforced. Absent all three, ask. The task's change is one
-   Conventional Commit, and the box is ticked once that commit exists — never before it, never batched
-   to the phase boundary.
+8. **Land it, then tick the box, before the next task starts.** Settle which branch may receive a commit
+   before the run's first one: the default branch, `git symbolic-ref refs/remotes/origin/HEAD`, is
+   off-limits unless the instruction layer says otherwise, and a non-default branch is open unless the
+   instruction layer names it. `gh api repos/:owner/:repo/rules/branches/<branch>` reports what is
+   enforced, never what is permitted, and `branches/<branch>/protection`'s 404 is a ruleset it cannot see
+   rather than an unprotected branch — neither answers the question. The task's change is one Conventional
+   Commit, and the box is ticked once that commit exists — never before it, never batched to the phase
+   boundary.
 9. **Repeat from step 5 for the phase's remaining tasks**, then stop rather than rolling on.
 10. **Review the phase's commits as the `review:architect` agent**, with the `review:change` skill
     where the repo enables it. The brief is a run-plan phase and the tasks it landed; `review:change`
