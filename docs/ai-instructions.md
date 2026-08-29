@@ -70,11 +70,14 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   skill that fits a role goes to that role; a third that fits none retires the exception rather than
   extending it. **`scaffold` is a role** — standing a project up — so a second stack's toolchain joins it
   rather than `stacks`. A plugin owned by another repository is outside this rule: nothing here composed it.
-- **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a label
-  scheme, a limit describing their artefacts — it belongs in that consumer's own `.claude/skills/`
-  instead. **A limit that exists to force the shape is part of the shape**, so the skill states it
-  outright: `write-adr`'s 80-line ceiling is the forcing function for its other rules, not a reading of
-  what a repository writes. **A skill that defers a consumer fact and has no consuming repo goes to
+- **A plugin's skill is generic.** The moment it names one consumer's conventions — a label scheme, a
+  limit describing their artefacts, a value it should have read off the tree — it belongs in that
+  consumer's own `.claude/skills/` instead. **What the skill imposes is part of the shape, and it states
+  that outright**: `write-adr`'s 80-line ceiling is the forcing function for its other rules, and the
+  directory a record lands in is the skill's own ruling, not a reading of what a repository writes.
+  **The test is which way the fact flows** — a path the skill dictates is shape, and fixing it is what
+  lets a reader of two repositories find the artefact in one place; a path it must discover is
+  convention. **A skill that defers a consumer fact and has no consuming repo goes to
   `~/.claude/skills/`, not into a plugin** — being generic has nowhere to point once there is no caller's
   instruction layer to defer to. A skill that defers nothing is outside that rule: it states a stance
   rather than reading a fact, so it needs no caller and may ship with no consumer, and a repo that
