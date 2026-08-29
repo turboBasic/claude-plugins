@@ -17,35 +17,29 @@ none of that: it is that repository, sourced whole, and the entry names the skil
 lives — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md). Kebab-case for
 every directory and file name.
 
-**A command and a skill are different entry points, not alternatives.** A **skill** is matched by the
-model from its `description`, so it suits a procedure that should be reached by intent. A **command** is
-invoked by name by a human, takes `argument-hint` positionals, and is therefore what side-effecting,
-parameterized, long-running work belongs in — nobody wants a project generator firing because a sentence
-sounded relevant. Where a capability wants both, the skill carries the trigger phrases and hands the
-invocation over; **it does not duplicate the procedure**, which stays in one place.
-
-**The two must not share a name.** Within one plugin the command wins the name and the skill **silently
-does not load** — no error, it is simply absent from the skill listing. Measured with `--plugin-dir`
-(2026-08-22), on a command and a skill then both named `new-python-project`: the skill was invisible, and
-renaming it made its description appear.
-
 **Every plugin here is prose.** The gate reads files and runs nothing a plugin ships, which is why it
 holds no typecheck, no test and no language linter. **Keep it that way unless a plugin genuinely needs to
 run** — the first one that does brings its whole project inside the plugin directory, and brings those
 checks back with it.
 
-**A plugin that executes code states the substrate it assumes**, because the manifest declares only the
-declared component types — `hooks`, `mcpServers`, `lspServers`, `monitors`. Code a command shells out to
-is invisible to the host, so a missing toolchain surfaces as a shell error in a consumer's project rather
-than at install time, and naming it is the only warning a consumer gets.
-
-`docs/decisions/` holds the records, `NNNN-<slug>.md`, whose `scope:` is one of `marketplace`, `plugin`
-or `tooling`.
+`docs/decisions/` holds the records, `NNNN-<slug>.md`, whose `scope:` is one of `marketplace`, `plugin` or
+`tooling`; [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md) is the reference
+shape.
 
 [`docs/technical-debt.md`](technical-debt.md) holds the debt register, `TD-NN` per row. **It is the
 further check this repository declares its own:** a housekeeping sweep evaluates each row's `Due when`
-against the tree and reports the ones that now hold. The register states its own entry rules — an
-obligation that will not reduce to an answerable condition is an issue, not a row.
+against the tree and reports the ones that now hold. The register states its own entry rules.
+
+## Commands and skills
+
+**A command and a skill are different entry points, not alternatives.** A **skill** is matched from its
+`description`, so it suits a procedure reached by intent; a **command** is invoked by name with
+`argument-hint` positionals, so side-effecting, parameterized work belongs there — nobody wants a project
+generator firing because a sentence sounded relevant. Where a capability wants both, the skill carries the
+trigger phrases and hands over; **the procedure stays in one place**.
+
+**The two must not share a name.** Within one plugin the command wins and the skill **silently does not
+load** — no error, it is simply absent from the skill listing. Measured 2026-08-22.
 
 ## Consumers
 
@@ -74,27 +68,26 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   is a sign the role set is wrong, not that a plugin needs a grab bag. **`stacks` is the deliberate
   exception:** its skills answer to a tool, and it is enabled only in the repos holding that tool. A stack
   skill that fits a role goes to that role; a third that fits none retires the exception rather than
-  extending it. A plugin owned by another repository is outside this rule rather than an exception to it —
-  it is named for that repository, and nothing here composed it. **`scaffold` satisfies the rule rather
-  than bending it:** standing a project up is the role, and it is named for that rather than for the one
-  stack whose toolchain it currently states. A second stack joins it; if its stacks ever stop sharing that
-  role, that is the sign to split it by role again rather than by language.
-- **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
-  label scheme — it belongs in that consumer's own `.claude/skills/` instead. **A skill that defers a
-  consumer fact and has no consuming repo goes to `~/.claude/skills/`, not into a plugin** — being generic
-  has nowhere to point once there is no caller's instruction layer to defer to. A skill that defers
-  nothing is outside that rule: it states a stance rather than reading a fact, so it needs no caller and
-  may ship with no consumer, and a repo that disagrees shadows it per **Consumers** above.
+  extending it. **`scaffold` is a role** — standing a project up — so a second stack's toolchain joins it
+  rather than `stacks`. A plugin owned by another repository is outside this rule: nothing here composed it.
+- **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a label
+  scheme, a limit describing their artefacts — it belongs in that consumer's own `.claude/skills/`
+  instead. **A limit that exists to force the shape is part of the shape**, so the skill states it
+  outright: `write-adr`'s 80-line ceiling is the forcing function for its other rules, not a reading of
+  what a repository writes. **A skill that defers a consumer fact and has no consuming repo goes to
+  `~/.claude/skills/`, not into a plugin** — being generic has nowhere to point once there is no caller's
+  instruction layer to defer to. A skill that defers nothing is outside that rule: it states a stance
+  rather than reading a fact, so it needs no caller and may ship with no consumer, and a repo that
+  disagrees shadows it per **Consumers** above.
 - **A deferred fact is resolved by observation before declaration.** A skill needing a consumer fact reads
   the artefact that owns it by a command the skill names, then the consumer's declaration of it — a key in
   an optional `.claude/conventions.json`, or their instruction layer where it states the fact — then its
-  own stated default, then asks; and where the fact has no safe default it names which of those answered.
-  **For a vocabulary or a limit the artefact is a floor**, widened by the later rungs rather than ending
-  the search. **Naming a command or a key is not naming one consumer's
-  convention; naming the value is** —
-  [ADR 0002](decisions/0002-a-consumer-fact-is-resolved-by-observation-before-declaration.md).
+  own stated default, then asks. **Naming a command or a key is not naming one consumer's convention;
+  naming the value is.**
 - **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub
-  issues and pull requests, so a repo with no remote enables none of it.
+  issues and pull requests, so a repo with no remote enables none of it. A plugin that executes code states
+  its toolchain the same way — the manifest declares only `hooks`, `mcpServers`, `lspServers` and
+  `monitors`, so what a command shells out to is invisible to the host until it fails in a consumer's shell.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
   a change should reach consumers, not on every edit.
 - **A plugin whose source is another repository is that repository, never copied in here**, so it stays

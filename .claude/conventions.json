@@ -1,5 +1,4 @@
 {
-  "adr.line_ceiling": 80,
   "git.protected_branches": ["main"],
   "plan.dir": "tmp/"
 }
