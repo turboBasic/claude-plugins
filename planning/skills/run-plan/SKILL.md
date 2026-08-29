@@ -41,9 +41,9 @@ rules add to this loop without replacing it.
    Commit, and the box is ticked once that commit exists — never before it, never batched to the phase
    boundary.
 9. **Repeat from step 5 for the phase's remaining tasks**, then stop rather than rolling on.
-10. **Review the phase's commits as the `review:architect` agent**, with the `review:change` skill
-    where the repo enables it. The brief is a run-plan phase and the tasks it landed; `review:change`
-    "What the brief may say, and what it may not" owns the rest of it. Once for the phase, not per task.
+10. **Review the phase's commits as the `planning:architect` agent**, with the `review-change` skill. The
+    brief is a run-plan phase and the tasks it landed; `review-change` "What the brief may say, and what
+    it may not" owns the rest of it. Once for the phase, not per task.
     A finding obliges one of three answers: a further commit inside this phase, a task appended to the
     next phase, or a debt entry per `write-plan` step 8. Ticked boxes stay ticked.
 11. **Report** the tasks that landed, each finding and how it was answered, and what the next phase

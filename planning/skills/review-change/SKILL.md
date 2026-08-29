@@ -1,5 +1,5 @@
 ---
-name: change
+name: review-change
 description: Review a landed change as architect - what in the diff decided whether it passed, then the diff against the four concerns. Use when a plan's phase has landed, or when asked for an architecture review of a diff or branch.
 ---
 

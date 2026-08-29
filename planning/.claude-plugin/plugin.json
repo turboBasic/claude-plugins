@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "planning",
-  "version": "0.3.6",
-  "description": "Plan, issue and decision authoring as architect and product owner — plans whose tasks are one green commit each, issues with acceptance boxes that can fail, records carrying one ruling.",
+  "version": "0.4.0",
+  "description": "The delivery loop as architect, product owner and senior developer — plans whose tasks are one green commit each, issues with acceptance boxes that can fail, records carrying one ruling, and the review and the pull request that land them.",
   "author": {
     "name": "Andrii Melnyk",
     "url": "https://github.com/turboBasic"

@@ -8,7 +8,7 @@ description: Execute a backlog reading as product owner - move, split, cut, resi
 **Acting as product owner.** It owns a milestone's composition and an issue's scope, and it never touches
 the source tree: a milestone is reshaped by changing issues, never the code they describe.
 
-**This skill executes a reading; it does not produce one.** The reading is `review:backlog`'s: a
+**This skill executes a reading; it does not produce one.** The reading is `review-backlog`'s: a
 deliverable stated as one sentence about a person, and a keep, cut, split or resize answer per issue.
 Invoke that skill first where one is not in hand; where the owner has ruled, execute the ruling rather
 than re-deriving it.

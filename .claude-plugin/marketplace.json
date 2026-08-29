@@ -9,12 +9,7 @@
     {
       "name": "planning",
       "source": "./planning",
-      "description": "Plan, issue and decision authoring as architect and product owner."
-    },
-    {
-      "name": "review",
-      "source": "./review",
-      "description": "Review as architect, product owner and senior developer."
+      "description": "The delivery loop as architect, product owner and senior developer — authoring, execution, review and landing."
     },
     {
       "name": "hygiene",

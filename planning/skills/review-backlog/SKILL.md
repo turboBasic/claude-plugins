@@ -1,5 +1,5 @@
 ---
-name: backlog
+name: review-backlog
 description: Read a milestone as product owner and produce the reading - the deliverable as one sentence about a person, and a keep, cut, split or resize answer per issue. Changes nothing. Use when asked whether the backlog is the right shape.
 ---
 
@@ -7,8 +7,8 @@ description: Read a milestone as product owner and produce the reading - the del
 
 **Acting as product owner** ([`product-owner`](../../agents/product-owner.md)). The limit this workflow
 adds: it changes **nothing at all** — not an issue, not a label, not an edge. The deliverable is the
-reading; executing it is `planning:groom-milestone`'s where the repo enables it. A reading that has already
-moved an issue took the decision it was asked to inform.
+reading; executing it is `groom-milestone`'s. A reading that has already moved an issue took the decision it
+was asked to inform.
 
 Read the milestone's epic before its children. An epic describing what the milestone used to contain is the
 finding that explains most of the others.

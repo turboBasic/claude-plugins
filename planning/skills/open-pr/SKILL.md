@@ -1,5 +1,5 @@
 ---
-name: pr-create
+name: open-pr
 description: Open a pull request for the current branch with gh, filling the repo's PR template from the diff. Use when asked to create, open or raise a PR.
 user-invocable: true
 model: sonnet
@@ -9,7 +9,7 @@ allowed-tools: Bash(git log:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(gi
 # Open a PR
 
 Works from the default branch (deriving and pushing a feature branch first) or from a feature branch
-already checked out. Merging is `review:pr-merge`'s; reviewing the change is `review:change`'s.
+already checked out. Merging is `merge-pr`'s; reviewing the change is `review-change`'s.
 
 1. **Resolve the default branch** via `gh repo view --json defaultBranchRef -q .defaultBranchRef.name`,
    then list commits unmerged into it. Nothing unmerged: say there is nothing to PR, and stop.
@@ -25,7 +25,7 @@ already checked out. Merging is `review:pr-merge`'s; reviewing the change is `re
 4. **Read `.github/PULL_REQUEST_TEMPLATE.md` verbatim.** That is the skeleton, and its sections are
    the only sections.
 
-5. **Derive the title** as `review:pr-merge` step 4 does.
+5. **Derive the title** as `merge-pr` step 4 does.
 
 6. **Fill every placeholder and every section the template defines.**
 
