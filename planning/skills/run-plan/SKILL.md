@@ -32,25 +32,22 @@ rules add to this loop without replacing it.
    runner reads tracked files only, so a run that passes over an untracked file has checked nothing.
    Re-stage what a hook reformats and re-run. A `Verify:` line may ask for less than every gate; it never
    licenses less.
-8. **Land it, then tick the box, before the next task starts.** Settle which branch may receive a commit
-   before the run's first one rather than after: `git symbolic-ref refs/remotes/origin/HEAD` names the
-   default branch, and `gh api repos/:owner/:repo/rules/branches/<branch>` lists the rules in force — use
-   that rather than `branches/<branch>/protection`, which sees only legacy protection and so returns 404
-   for a branch a ruleset protects, and needs admin to read at all. Rules are enforcement, not policy, so
-   `.claude/conventions.json`'s `git.protected_branches` names any branch the repo keeps off-limits
-   unenforced: an unprotected branch is not thereby a permitted one. No safe default — absent all three,
-   ask. The task's change is one Conventional Commit; the box is
-   ticked once that commit exists, never before it and never batched to the phase boundary.
-9. **Take the next unchecked task in the same phase and repeat from step 5.** At the phase boundary,
-   stop. Do not roll into the next phase.
+8. **Land it, then tick the box, before the next task starts.** Settle which branch may receive a
+   commit before the run's first one: `git symbolic-ref refs/remotes/origin/HEAD` names the default
+   branch and `gh api repos/:owner/:repo/rules/branches/<branch>` the rules in force — not
+   `branches/<branch>/protection`, whose 404 means a ruleset it cannot see, never an unprotected
+   branch. Rules are enforcement, not policy, so `.claude/conventions.json`'s `git.protected_branches`
+   names a branch kept off-limits unenforced. Absent all three, ask. The task's change is one
+   Conventional Commit, and the box is ticked once that commit exists — never before it, never batched
+   to the phase boundary.
+9. **Repeat from step 5 for the phase's remaining tasks**, then stop rather than rolling on.
 10. **Review the phase's commits as the `review:architect` agent**, with the `review:change` skill
     where the repo enables it. The brief is a run-plan phase and the tasks it landed; `review:change`
     "What the brief may say, and what it may not" owns the rest of it. Once for the phase, not per task.
     A finding obliges one of three answers: a further commit inside this phase, a task appended to the
     next phase, or a debt entry per `write-plan` step 8. Ticked boxes stay ticked.
-11. **Report** the tasks that landed, what the review found and how each finding was answered, and what
-    the next phase holds. The phase is not complete until every finding has one of those three answers or
-    the owner overrides it.
+11. **Report** the tasks that landed, each finding and how it was answered, and what the next phase
+    holds. A finding stays open, and with it the phase, until answered or the owner overrides it.
 
 ## Judgment
 
@@ -60,8 +57,4 @@ rules add to this loop without replacing it.
   names the task and what failed.
 - **An already-done task is verified and checked off, not redone.** Confirm the end state the task
   describes actually holds, then tick.
-- **A report-only task lands no commit of its own.** Its product is durable only where it puts something;
-  where it puts nothing, say so rather than holding the task open for a file change that is not coming.
 - **A task that names a non-negotiable is a stop, not a licence.**
-- **The last task closes the plan and hands the work to the issue.** `write-plan` step 8 owns what that
-  task must land; this loop executes it.
