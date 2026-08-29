@@ -43,24 +43,20 @@ committed.
 7. **Make every Ground rule and Out of scope entry rule something out.** A ground rule names a mistake
    available in *this* work, not a convention the instruction layer already binds. An Out of scope entry
    carries the reason it lost.
-8. **Make the last task land what outlives the file.** The issue's checkboxes and the epic's box ticked,
-   the status line set to complete with the date, and every remaining obligation given a home: an issue
-   where it is work someone will do, the technical-debt register — the one `rg --files -g '*technical-debt*'`
-   finds, which locates an empty register as well as a populated one — where it states a condition the
-   repository can answer. No register found: say so and ask rather than starting one. The Technical debt section then names the identifiers of whatever entries exist, and says so when
-   there are none. Ask where the shape is genuinely unclear rather than forcing an entry no sweep can
-   evaluate.
+8. **Make the last task land what outlives the file.** The issue's checkboxes and the epic's box
+   ticked — not closed, the PR's `Closes #N` does that — the status line set to complete with the
+   date, and every remaining obligation given a home: an issue where it is work someone will do, or
+   the technical-debt register, the one `rg --files -g '*technical-debt*'` finds, where it states a
+   condition the repository can answer. Where no register exists, or the entry would state no
+   condition a sweep can evaluate, say so and ask. The Technical debt section names the identifiers
+   of whatever entries exist, and says so when there are none.
 
 ## Judgment
 
 - **A task is phrased as an end state, not an action** — "add the module" is ambiguous the moment the
   module exists.
-- **A report-only task must land something durable** — a register entry, a term in a list, a corrected
-  document. Nothing here is committed, so a task leaving none of those evaporates with the file.
+- **A report-only task must land something durable** — a register entry, a term in a list, a
+  corrected document.
 - **A task that would break a non-negotiable does not belong in a plan.** A plan is not authorisation.
 - **Tasks coming out as "decide X" mean the decision is not made.** Those belong in the issue thread or
   a record.
-- **The sections belong to the instruction layer, not to you.** Adding or renaming one is a second owner
-  for a fact that already has one.
-- **A close-out task ticks the issue's checkboxes; it does not close the issue.** Leave that to the PR's
-  `Closes #N`.
