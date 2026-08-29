@@ -14,8 +14,8 @@ rules add to this loop without replacing it.
 
 ## Steps
 
-1. **Locate the plan** in the directory `write-plan` resolves, and match the number, slug or description
-   against what is there. More than one match: ask.
+1. **Locate the plan** in the directory `write-plan` names, matching the slug or description against what
+   is there. More than one match: ask.
 2. **Read the status line first.** A plan marked complete is frozen — say so and stop.
 3. **Settle the scope before the first task, never during.** The default is the phase holding the first
    unchecked task, run to its end. Ask up front where the request reads narrower or wider — a scope

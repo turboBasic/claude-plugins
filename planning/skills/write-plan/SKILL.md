@@ -7,10 +7,8 @@ description: Author a scratch implementation plan whose tasks are one green comm
 
 **Acting as architect.** It owns the plan, never the tree the plan is written against.
 
-Where a plan file lives: `rg --files -g '*.plan.md'` for the directory plans already use, else
-`.claude/conventions.json`'s `plan.dir`, else the instruction layer. The shape is this skill's, not read
-off anything. Absent a directory from all three:
-`tmp/<slug>.plan.md`, gitignored and never committed, no frontmatter, with a **Status line** directly
+A plan is `tmp/plans/<slug>.plan.md`, scratch and never committed — add `tmp/` to `.gitignore` where it is
+missing. The shape is this skill's, read off nothing: no frontmatter, with a **Status line** directly
 under the title reading `**Status: in progress (YYYY-MM-DD).**` or `**Status: complete (YYYY-MM-DD).**`;
 **Ground rules**; **Out of scope**; **Phases** grouping tasks, optionally carrying a `Model:` note;
 **Tasks** as checkboxes numbered `<phase>.<task>`, each ending in a `Verify:` line; and **Technical
