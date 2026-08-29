@@ -59,6 +59,8 @@ repos:
       # explicitly. The merge base is inferred from refs alone, never from what happens to be
       # staged. No remote, or a base that does not resolve, falls back to HEAD — the old
       # index-versus-HEAD behaviour — so the gate is silent rather than wrong.
+      # `scripts` counts alongside skills, agents and commands: a consumer runs the cached copy of a
+      # script, so a fixed payload that ships without a bump keeps sending the broken one.
       # No filenames: the unit is the plugin, and prek splits long filename lists across invocations.
       - id: plugin-version-bumped
         name: an edited plugin bumps its version
@@ -73,9 +75,10 @@ repos:
           rc=0;
           for m in */.claude-plugin/plugin.json; do [ -e "$m" ] || continue;
           p="${m%%/*}";
-          git diff --cached --quiet "$cmp" -- "$p/skills" "$p/agents" "$p/commands" && continue;
+          git diff --cached --quiet "$cmp" -- "$p/skills" "$p/agents" "$p/commands" "$p/scripts"
+          && continue;
           git diff --cached "$cmp" -- "$m" | grep -q "^+.*\"version\"" ||
-          { echo "$p: skills, agents or commands changed against $cmp but $m version did not.
+          { echo "$p: skills, agents, commands or scripts changed against $cmp but $m version did not.
           Bump it, or consumers keep the cached copy."; rc=1; };
           done;
           exit $rc'
