@@ -1,5 +1,5 @@
 ---
-name: change
+name: review-change
 description: Review a landed change as architect - what in the diff decided whether it passed, then the diff against the four concerns. Use when a plan's phase has landed, or when asked for an architecture review of a diff or branch.
 ---
 
@@ -7,7 +7,7 @@ description: Review a landed change as architect - what in the diff decided whet
 
 **Acting as architect** ([`architect`](../../agents/architect.md)). The limit this workflow adds: the
 deliverable is the verdict, and a finding is answered by whoever holds the tree — in a further commit, a
-task on the next phase, or an entry in the technical-debt register `rg --files -g '*technical-debt*'` finds.
+task on the next phase, or an entry in the technical-debt register `write-plan` names.
 
 ## What is already settled
 
@@ -16,9 +16,9 @@ task on the next phase, or an entry in the technical-debt register `rg --files -
 - **A commit implies its hooks ran** on the files it matches — the formatters, the linters, the spell
   check, the message check. The repo's pre-commit config is the roster.
 - **A commit implies nothing about typecheck or tests**, which no hook runs. Those are the two facts a
-  caller has to state; absent a statement they are unknown.
-- **A phase run by `run-plan` implies both**, because its step 7 runs the full gates before every commit
-  in the range.
+  caller has to state.
+- **A phase run by `run-plan` implies both**, because it runs the full gates before every commit in the
+  range.
 - **A pushed ref needs no claim at all.** `gh api repos/:owner/:repo/commits/<sha>/check-runs` is
   authoritative in one call, and it outranks anything a brief says.
 
@@ -37,21 +37,19 @@ asked for rather than assumed:
 **It may not carry the implementer's reasoning** — why that shape was chosen, what alternatives were
 rejected, or any self-assessment. A brief supplying it hands over a conclusion dressed as a fact.
 
-**A false claim in the brief outranks every other finding**, and is reported first. The review's economy
-rests on those statements, so a wrong one is the most expensive thing in the range.
+**A false claim in the brief outranks every other finding**, and is reported first.
 
 ## Ask first whether the change moved its own goalposts
 
-Before anything else, look at what in the diff decides whether the change passes. That surface is small and
+Look at what in the diff decides whether the change passes. That surface is small and
 worth naming: a test's expected value, a tolerance, a test moved behind a skip marker, an `#[allow]` or a
 `# type: ignore`, a lint level in the package manifest, a gate's configuration, and the `Verify:` line of
 the task the commit lands under.
 
 Touching that surface is not the finding — a tolerance is sometimes wrong, and a `Verify:` line sometimes
-cannot be run as written. The finding is touching it *as the way* the task became satisfiable. Say which of
-the two this diff is: a change made because the criterion was wrong, or a criterion changed because the code
-would not meet it. State that reading explicitly even when the answer is the first one, because a review
-that stays silent here reads as a review that did not look.
+cannot be run as written. The finding is touching it *as the way* the task became satisfiable. Name which of
+the two this diff is — a change made because the criterion was wrong, or a criterion changed because the
+code would not meet it — including when it is the first, since silence here reads as not having looked.
 
 ## What to read, and what not to
 

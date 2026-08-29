@@ -40,9 +40,9 @@ live in an issue and a plan file.
    title and the slug. If it needs an "and" joining two independent claims, or the draft starts wanting a
    numbered list, there are two questions here: record the one asked about and name the other for its own
    record.
-3. **Take the number after the highest ever used** — never a gap, which `git log --diff-filter=D
-   --name-only` explains — in the directory the records sit in, `rg --files -g '[0-9][0-9][0-9][0-9]-*.md'`,
-   `docs/decisions/` absent any. Plus a kebab-case slug of the ruling.
+3. **A record is `docs/decisions/NNNN-<slug>.md`** — four digits, and a kebab-case slug of the ruling. The
+   number comes after the highest ever used in that directory, never filling a gap, which `git log
+   --diff-filter=D --name-only` explains.
 4. **Write the frontmatter.**
 
    ```yaml
