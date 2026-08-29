@@ -3,7 +3,6 @@ id: 0001
 status: accepted
 date: 2026-08-21
 scope: marketplace
-tags: [adr]
 ---
 
 # ADR 0001 — A plugin owned elsewhere is the whole repository, sourced over HTTPS
@@ -11,10 +10,10 @@ tags: [adr]
 ## Decision
 
 A skill that belongs to another repository is published as its own plugin, one per repository, whose
-source is that whole repository over an HTTPS `url` at `ref: main`. The entry carries `strict: false`
-and names the skill where it already lives (`"skills": ["./.claude/skills/<tool>"]`), so the source
-repository gains no `plugin.json` and a sibling skill the entry does not name stays unpublished. The
-entry carries no `version`: the resolved commit is the version.
+source is that whole repository fetched over HTTPS at its main branch. The entry names the skill at the
+path it already occupies and requires no manifest there, so the source repository is never edited and a
+sibling skill the entry does not name stays unpublished. It pins no version: the resolved commit is the
+version.
 
 ## Context
 
@@ -51,8 +50,7 @@ whole-repo source reproduces the repository layout in the cache, which is why th
 
 ### A `github` source rather than `url`
 
-- Rejected because: it clones over SSH, and GitHub is reached over HTTPS from the machine that installs
-  these — a property of this account's access, not of the plugin format.
+- Rejected because: it clones over SSH, and this account reaches GitHub over HTTPS — an access property.
 - Rejected despite: `owner/repo` shorthand, and `marketplace add` falling back to HTTPS on its own.
 
 ## Consequences

@@ -40,7 +40,8 @@ is invisible to the host, so a missing toolchain surfaces as a shell error in a 
 than at install time, and naming it is the only warning a consumer gets.
 
 `docs/decisions/` holds the records, `NNNN-<slug>.md`, whose `scope:` is one of `marketplace`, `plugin`
-or `tooling`.
+or `tooling`. [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md) is the
+reference shape — its option count is its own, not a target.
 
 [`docs/technical-debt.md`](technical-debt.md) holds the debt register, `TD-NN` per row. **It is the
 further check this repository declares its own:** a housekeeping sweep evaluates each row's `Due when`
@@ -79,20 +80,20 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   than bending it:** standing a project up is the role, and it is named for that rather than for the one
   stack whose toolchain it currently states. A second stack joins it; if its stacks ever stop sharing that
   role, that is the sign to split it by role again rather than by language.
-- **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a ceiling, a
-  label scheme — it belongs in that consumer's own `.claude/skills/` instead. **A skill that defers a
-  consumer fact and has no consuming repo goes to `~/.claude/skills/`, not into a plugin** — being generic
-  has nowhere to point once there is no caller's instruction layer to defer to. A skill that defers
-  nothing is outside that rule: it states a stance rather than reading a fact, so it needs no caller and
-  may ship with no consumer, and a repo that disagrees shadows it per **Consumers** above.
+- **A plugin's skill is generic.** The moment it names one consumer's conventions — a path, a label
+  scheme, a limit describing their artefacts — it belongs in that consumer's own `.claude/skills/`
+  instead. **A limit that exists to force the shape is part of the shape**, so the skill states it
+  outright: `write-adr`'s 80-line ceiling is the forcing function for its other rules, not a reading of
+  what a repository writes. **A skill that defers a consumer fact and has no consuming repo goes to
+  `~/.claude/skills/`, not into a plugin** — being generic has nowhere to point once there is no caller's
+  instruction layer to defer to. A skill that defers nothing is outside that rule: it states a stance
+  rather than reading a fact, so it needs no caller and may ship with no consumer, and a repo that
+  disagrees shadows it per **Consumers** above.
 - **A deferred fact is resolved by observation before declaration.** A skill needing a consumer fact reads
   the artefact that owns it by a command the skill names, then the consumer's declaration of it — a key in
   an optional `.claude/conventions.json`, or their instruction layer where it states the fact — then its
-  own stated default, then asks; and where the fact has no safe default it names which of those answered.
-  **For a vocabulary or a limit the artefact is a floor**, widened by the later rungs rather than ending
-  the search. **Naming a command or a key is not naming one consumer's
-  convention; naming the value is** —
-  [ADR 0002](decisions/0002-a-consumer-fact-is-resolved-by-observation-before-declaration.md).
+  own stated default, then asks. **Naming a command or a key is not naming one consumer's convention;
+  naming the value is.**
 - **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub
   issues and pull requests, so a repo with no remote enables none of it.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
