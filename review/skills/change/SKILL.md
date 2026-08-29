@@ -7,7 +7,7 @@ description: Review a landed change as architect - what in the diff decided whet
 
 **Acting as architect** ([`architect`](../../agents/architect.md)). The limit this workflow adds: the
 deliverable is the verdict, and a finding is answered by whoever holds the tree — in a further commit, a
-task on the next phase, or an entry in the technical-debt register `rg --files -g '*technical-debt*'` finds.
+task on the next phase, or an entry in the technical-debt register at `docs/technical-debt.md`.
 
 ## What is already settled
 

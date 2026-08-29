@@ -44,9 +44,9 @@ committed.
 8. **Make the last task land what outlives the file.** The issue's checkboxes and the epic's box
    ticked — not closed, the PR's `Closes #N` does that — the status line set to complete with the
    date, and every remaining obligation given a home: an issue where it is work someone will do, or
-   the technical-debt register, the one `rg --files -g '*technical-debt*'` finds, where it states a
-   condition the repository can answer. Where no register exists, or the entry would state no
-   condition a sweep can evaluate, say so and ask. The Technical debt section names the identifiers
+   the technical-debt register at `docs/technical-debt.md`, where it states a condition the repository
+   can answer. Where that file does not exist, or the entry would state no condition a sweep can
+   evaluate, say so and ask. The Technical debt section names the identifiers
    of whatever entries exist, and says so when there are none.
 
 ## Judgment
