@@ -16,15 +16,12 @@ popcircles
 sds
 
 # --- Python, for the modern-python skill and scaffold/scripts ---
-argparse
 boto
 dynaconf
 httpx
 isort
-pycache
 pydantic
 pylint
-pyproject
 stdlib
 structlog
 typer
@@ -54,9 +51,7 @@ tamasfe
 yzhang
 
 # --- GitHub API, for scaffold/scripts/repo_settings.py ---
-Dependabot
 GHAS
-rulesets
 
 # --- Vocabulary ---
 frontmatter

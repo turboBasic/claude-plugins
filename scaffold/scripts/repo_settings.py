@@ -7,10 +7,13 @@ import json
 import subprocess
 import sys
 
+# Not read off any repository, and the key a ruleset is matched on: the rulesets that exist across an
+# account are named whatever each was named, so this is the baseline's own ruling.
 RULESET_NAME = "protect-default-branch"
 
-# Not read off any repository: the three rulesets that exist across the account are named three
-# different things, so the name is this command's own ruling and the key it matches on.
+# Every value here is the baseline's ruling, not a reading of anyone's tree — including the ones an
+# owner might have gone the other way on, `has_projects` above all. A baseline exists to stop the
+# negotiation, so only the per-repository facts get flags: description, homepage, topics, checks.
 BASELINE = {
     "has_issues": True,
     "has_wiki": False,
@@ -150,25 +153,41 @@ def resolve(target):
 
 
 def create(owner, name, public, description):
+    visibility = "public" if public else "private"
+    if DRY:
+        print(f"  create: absent -> {owner}/{name} ({visibility})")
+        return
     me = gh("user")["login"]
     path = "user/repos" if owner == me else f"orgs/{owner}/repos"
     body = {"name": name, "private": not public}
     if description:
         body["description"] = description
     gh(path, "POST", body)
-    print(f"created {owner}/{name} ({'public' if public else 'private'})")
+    print(f"created {owner}/{name} ({visibility})")
 
 
 def apply(args):
     owner, name = resolve(args.target)
     slug = f"{owner}/{name}"
+    print(slug)
     repo = gh(f"repos/{slug}", allow_fail=True)
-    if repo is None:
+    fresh = repo is None
+    if fresh:
         if not args.create:
             sys.exit(f"{slug} does not exist. Pass --create to create it.")
         create(owner, name, args.public, args.description)
-        repo = gh(f"repos/{slug}")
-    public = repo.get("visibility") == "public"
+        # Under --dry-run the POST was suppressed, so there is nothing to GET back: the baseline is
+        # reported against an empty repository at the visibility --create would have given it.
+        repo = {} if DRY else gh(f"repos/{slug}")
+    public = args.public if fresh else repo.get("visibility") == "public"
+    if not fresh and args.public and not public:
+        print(
+            "  note: --public does not flip an existing private repository; left as it was"
+        )
+    if not public:
+        print(
+            "  note: secret scanning skipped — the API rejects it on a private repo without GHAS"
+        )
 
     settings = desired_settings(args.description, args.homepage)
     security = security_settings(public)
@@ -193,25 +212,35 @@ def apply(args):
         if have != want:
             topic_change = (have, want)
 
-    alerts = gh(f"repos/{slug}/vulnerability-alerts", allow_fail=True) is not None
-    fixes = bool(
+    # A suppressed create leaves nothing to query, so every state below is the fresh-repository one.
+    unborn = fresh and DRY
+    alerts = (
+        not unborn
+        and gh(f"repos/{slug}/vulnerability-alerts", allow_fail=True) is not None
+    )
+    fixes = not unborn and bool(
         (gh(f"repos/{slug}/automated-security-fixes", allow_fail=True) or {}).get(
             "enabled"
         )
     )
 
     want_ruleset = desired_ruleset(args.status_check)
-    existing = next(
-        (r for r in gh(f"repos/{slug}/rulesets") if r.get("name") == RULESET_NAME), None
-    )
-    ruleset_state = "absent"
+    # Rulesets are a paid feature on a private repository under a personal account, where the list
+    # 403s rather than coming back empty — and private is what --create makes by default.
+    listed = [] if unborn else gh(f"repos/{slug}/rulesets", allow_fail=True)
+    if listed is None:
+        print(
+            "  note: rulesets unavailable here — the default branch will stay unprotected"
+        )
+        listed, want_ruleset = [], None
+    existing = next((r for r in listed if r.get("name") == RULESET_NAME), None)
+    ruleset_state = "current" if want_ruleset is None else "absent"
     if existing:
         full = gh(f"repos/{slug}/rulesets/{existing['id']}")
         ruleset_state = (
             "current" if ruleset_shape(full) == ruleset_shape(want_ruleset) else "stale"
         )
 
-    print(slug)
     report(changes)
     if topic_change:
         report({"topics": topic_change})

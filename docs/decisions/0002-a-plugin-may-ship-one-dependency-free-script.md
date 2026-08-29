@@ -9,12 +9,15 @@ scope: marketplace
 
 ## Decision
 
-A plugin authored here may ship executable code as a single script under `<plugin>/scripts/`,
-importing only its language's standard library. It brings no packaging of its own: no
+A plugin authored here may ship executable code under `<plugin>/scripts/`, importing only its
+language's standard library, in Python and no second language. It brings no packaging of its own: no
 `pyproject.toml`, no lockfile, no lint or type configuration inside the plugin directory. Its checks
 are hooks in the existing `.pre-commit-config.yaml`, selected by a `mise` task like every other gate,
-and the behavioural check it carries is a `--self-check` flag over its own pure functions. A second
-script in one plugin, or any third-party import, exhausts this and reopens the question.
+and the behavioural check it carries is a `--self-check` flag over its own pure functions.
+
+A third-party import, a second language, or a script grown past what one `--self-check` can hold
+exhausts this and reopens the question. **A file count does not** — the gate is file-count-blind, so
+splitting one script in two costs nothing while the first script in a second plugin costs a hook.
 
 ## Context
 
@@ -68,11 +71,11 @@ which a script-only edit ships against the copy a consumer already installed. Py
 type this repository registers: `.editorconfig` gains `[*.py]`, `.gitignore` gains `__pycache__/` and
 `.ruff_cache/`, and `cspell` gains the `python` dictionary.
 
-Types are unchecked. TD-01 holds it, due when a second Python file joins `scaffold/scripts/` — the
-point at which a nested project stops being overhead and this ruling is reopened anyway.
+Types are unchecked. TD-01 holds it, due when a second plugin here ships a script — the point at
+which the gate surface stops being one hook and a shared typecheck starts paying for itself.
 
-Reopen if a plugin here needs a second script, a third-party import, or a language whose standard
-library cannot reach an authenticated HTTP API through a CLI already on the box.
+Reopen if a plugin here needs a third-party import, a second language, or a script grown past what
+one `--self-check` can hold.
 
 ## Links
 

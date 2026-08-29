@@ -19,8 +19,9 @@ repos:
         stages: [commit-msg]
 
   # types_or is overridden on both: upstream's ruff-format also claims `markdown`, which would let a
-  # Python formatter rewrite the fenced blocks in every skill and record here. No args, so the line
-  # width is ruff's own 88 — under .editorconfig's 100, which stays the only place that number lives.
+  # Python formatter rewrite the fenced blocks in every skill and record here. No args, so Python
+  # wraps at ruff's own 88 rather than at .editorconfig's 100 — narrower, so nothing conflicts, and
+  # no width is configured twice.
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.5
     hooks:
