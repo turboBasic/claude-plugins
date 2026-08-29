@@ -83,10 +83,10 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   rather than reading a fact, so it needs no caller and may ship with no consumer, and a repo that
   disagrees shadows it per **Consumers** above.
 - **A deferred fact is resolved by observation before declaration.** A skill needing a consumer fact reads
-  the artefact that owns it by a command the skill names, then the consumer's declaration of it — a key in
-  an optional `.claude/conventions.json`, or their instruction layer where it states the fact — then its
-  own stated default, then asks. **Naming a command or a key is not naming one consumer's convention;
-  naming the value is.**
+  the artefact that owns it by a command the skill names, then their instruction layer where it states the
+  fact, then its own stated default, then asks. **Naming a command is not naming one consumer's convention;
+  naming the value is.** The last rung is live rather than theoretical: `write-adr`'s `scope:` vocabulary
+  reaches it, having nothing to read in a repository whose first record this is.
 - **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub
   issues and pull requests, so a repo with no remote enables none of it. A plugin that executes code states
   its toolchain the same way — the manifest declares only `hooks`, `mcpServers`, `lspServers` and
