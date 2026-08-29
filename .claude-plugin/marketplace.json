@@ -24,7 +24,7 @@
     {
       "name": "scaffold",
       "source": "./scaffold",
-      "description": "The toolchain a modern Python project starts from — uv, hatchling, ruff, Pyright and the runtime libraries that go with them."
+      "description": "Standing a project up — the GitHub repository baseline applied by command, and the toolchain a modern Python project starts from."
     },
     {
       "name": "1password-docs",
