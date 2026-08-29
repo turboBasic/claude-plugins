@@ -13,3 +13,4 @@ work done and the row deleted, so `git log` holds the highest number assigned.
 
 | ID | Debt | Due when | Costs if left |
 |---|---|---|---|
+| TD-01 | `scaffold/scripts/repo_settings.py` has no typecheck. `ruff` lints it; nothing checks the shape of the payloads it builds. | A second Python file joins `scaffold/scripts/` — the point at which [ADR 0002](decisions/0002-a-plugin-may-ship-one-dependency-free-script.md) reopens anyway and a nested project stops being overhead. | A wrong payload shape reaches the GitHub API before anything complains, and the failure is a 422 in a consumer's shell rather than a red gate here. |
