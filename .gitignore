@@ -2,6 +2,8 @@ tmp/
 
 .DS_Store
 node_modules/
+__pycache__/
+.ruff_cache/
 
 # Per-developer permission allowlist.
 .claude/settings.local.json

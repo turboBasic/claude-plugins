@@ -15,7 +15,8 @@ dxc
 popcircles
 sds
 
-# --- Python, for the modern-python skill ---
+# --- Python, for the modern-python skill and scaffold/scripts ---
+argparse
 boto
 dynaconf
 httpx
@@ -51,6 +52,11 @@ esbenp
 hverlin
 tamasfe
 yzhang
+
+# --- GitHub API, for scaffold/scripts/repo_settings.py ---
+Dependabot
+GHAS
+rulesets
 
 # --- Vocabulary ---
 frontmatter
