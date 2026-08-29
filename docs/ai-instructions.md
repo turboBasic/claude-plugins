@@ -12,15 +12,16 @@ Work-specific skills live in a separate org-hosted marketplace.
 
 `.claude-plugin/marketplace.json` is the catalog, one entry per plugin. A plugin authored here has a
 relative source (`./<plugin>`), holds only `plugin.json` in `.claude-plugin/`, and keeps
-`skills/<name>/SKILL.md` and `agents/<name>.md` at its root. A plugin owned by another repository has
-none of that: it is that repository, sourced whole, and the entry names the skill where it already
-lives — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md). Kebab-case for
-every directory and file name.
+`skills/<name>/SKILL.md`, `commands/<name>.md` and `agents/<name>.md` at its root. A plugin owned by
+another repository has none of that: it is that repository, sourced whole, and the entry names the skill
+where it already lives — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md).
+Kebab-case for every directory and file name.
 
-**Every plugin here is prose.** The gate reads files and runs nothing a plugin ships, which is why it
-holds no typecheck, no test and no language linter. **Keep it that way unless a plugin genuinely needs to
-run** — the first one that does brings its whole project inside the plugin directory, and brings those
-checks back with it.
+**A plugin here is prose, save for one dependency-free script per plugin under `scripts/`** —
+[ADR 0002](decisions/0002-a-plugin-may-ship-one-dependency-free-script.md) is the allowance and what
+reopens it. Such a script's checks are hooks in `.pre-commit-config.yaml` reached by a `mise` task; it
+brings no `pyproject.toml`, no lockfile and no lint or type configuration of its own. **Anything more is
+a new ruling, not an extension of this one** — a second script in one plugin, or any third-party import.
 
 `docs/decisions/` holds the records, `NNNN-<slug>.md`, whose `scope:` is one of `marketplace`, `plugin` or
 `tooling`; [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md) is the reference
@@ -91,9 +92,10 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
   naming the value is.** The last rung is live rather than theoretical: `write-adr`'s `scope:` vocabulary
   reaches it, having nothing to read in a repository whose first record this is.
 - **Generic is not unconditional: a plugin states the substrate it assumes.** `planning` assumes GitHub
-  issues and pull requests, so a repo with no remote enables none of it. A plugin that executes code states
-  its toolchain the same way — the manifest declares only `hooks`, `mcpServers`, `lspServers` and
-  `monitors`, so what a command shells out to is invisible to the host until it fails in a consumer's shell.
+  issues and pull requests, so a repo with no remote enables none of it. **A plugin shipping a script
+  states its interpreter and every binary it shells out to, in the command's own body** — the manifest
+  declares only `hooks`, `mcpServers`, `lspServers` and `monitors`, so what a command shells out to is
+  invisible to the host until it fails in a consumer's shell.
 - **Every `plugin.json` carries a `version`, and the marketplace entry does not repeat it.** Bump it when
   a change should reach consumers, not on every edit.
 - **A plugin whose source is another repository is that repository, never copied in here**, so it stays

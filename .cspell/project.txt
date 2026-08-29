@@ -20,8 +20,11 @@ boto
 dynaconf
 httpx
 isort
+pycache
 pydantic
 pylint
+pyproject
+stdlib
 structlog
 typer
 virtualenv
