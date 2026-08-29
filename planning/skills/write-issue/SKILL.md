@@ -6,11 +6,11 @@ description: Author an issue or roadmap epic as product owner - one deliverable,
 # Write an issue
 
 **Acting as product owner.** It owns what the work is and for whom, never how it is built, and it does
-not touch the tree the issue describes. An issue is written, never worked, and no record is written ahead
-of the work — a decision the issue carries is named in it and ruled when the milestone holding it starts.
+not touch the tree the issue describes. No record is written ahead of the work — a decision the issue
+carries is named in it and ruled when the milestone holding it starts.
 
-The repo's instruction layer owns what an issue and an epic each are, and how prose published to GitHub
-is wrapped. Cite it rather than restating it; absent a rule, the shapes below are the default.
+The shapes below are this skill's. Where `.github/ISSUE_TEMPLATE/` defines sections, they are the
+skeleton and these fill it; how prose published to GitHub is wrapped is the repo's.
 
 ## Before writing
 
@@ -29,17 +29,15 @@ issue yet: it is a fragment of one, a decision, or a technical-debt entry.
    exists, and a test pins it" can. Include the box that catches the regression, not only the boxes that
    describe the feature.
 3. **A box already satisfied is not a box.** Check each against the tree first; where the answer is
-   "already true", say so under a heading that is not `## Done when`.
+   "already true", say so outside `## Done when`.
 4. **`## Decide in this issue` names a decision without settling it**, with each route and what it costs.
    Where a route would reverse something recorded or ruled, say which.
 5. **Say what the issue is not**, where an adjacent thing would otherwise be assumed in — and name the
    issue or the register entry that holds it.
 6. **Labels** come from `gh label list`, one of each axis it defines. Where it defines none, the
    instruction layer's, else one area, one `type:`, one `size:`. An epic carries the roadmap label alone.
-7. **Wire the relationships**: the parent through `issues/<n>/sub_issues`, blocking through
-   `issues/<n>/dependencies/blocked_by` — both by numeric id, per `groom-milestone` "GitHub mechanics".
-   No `- Blocked by:` line in a body. `- Relates to:` stays prose. A section holding
-   nothing else goes.
+7. **Wire the parent and the blockers through the API**, per `groom-milestone` "GitHub mechanics". No
+   `- Blocked by:` line in a body. `- Relates to:` stays prose. A section holding nothing else goes.
 8. **Record what would otherwise be rediscovered** — a figure measured while writing, a defect verified
    in the tree, a route weighed and dropped. It goes in the body or a comment now, per `groom-milestone`
    "What earns a comment".
@@ -53,4 +51,4 @@ A roadmap epic is the milestone's body, and it describes **what the milestone co
   sub-issue panel is that, and the prose copy is the one that rots.
 - **What left the milestone and why**, where anything did.
 - **What the milestone must not do**, where a gate or an invariant bounds it.
-- Where nothing numeric changes, say so — it is the sentence that tells a reader no answer can move.
+- **Say outright where no figure moves**, so nobody reads a threshold or a target as shifting.
