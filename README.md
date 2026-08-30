@@ -52,4 +52,18 @@ Test a change before it is published by adding the working tree as a marketplace
 claude plugin marketplace add .
 ```
 
+## Saved Issues views
+
+GitHub stores these as opaque UI state — no REST endpoint, and no `SavedView` or `IssueView` type in the
+GraphQL schema — so they are recreated by hand on the Issues tab from the filters below. Measured
+2026-08-30. Both exclude the epic, since a `roadmap` issue is the milestone rather than work in it.
+
+| View | Filter |
+| --- | --- |
+| Unblocks something | `is:issue is:open is:blocking -is:blocked -label:roadmap sort:created-asc` |
+| Ready to start | `is:issue is:open -is:blocked -label:roadmap sort:created-asc` |
+
+Both read the sub-issue and dependency graph, so an issue reaches them by being wired through the API —
+`gh api repos/:owner/:repo/issues/<n>/dependencies/blocked_by` — not by a line in its body.
+
 See [`docs/ai-instructions.md`](docs/ai-instructions.md) for what belongs here and what does not.
