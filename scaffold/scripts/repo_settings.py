@@ -106,13 +106,24 @@ def desired_ruleset(status_checks=()):
 
 
 def ruleset_shape(ruleset):
-    # GitHub returns ids, timestamps and links that no desired state can match, so equality is
-    # taken over the fields this command sets. Rules arrive in GitHub's own order, hence the sort.
+    # GitHub returns ids, timestamps and links that no desired state can match, so equality is taken
+    # over the fields this command sets. Rules arrive in its own order, hence the sort; and it adds
+    # integration_id to every status-check context it reports, which without this reads as drift on
+    # every run. Nothing else it returns needs projecting — measured against a live ruleset.
+    rules = []
+    for rule in sorted(ruleset["rules"], key=lambda r: r["type"]):
+        if rule["type"] == "required_status_checks":
+            params = dict(rule["parameters"])
+            params["required_status_checks"] = [
+                {"context": c["context"]} for c in params["required_status_checks"]
+            ]
+            rule = {**rule, "parameters": params}
+        rules.append(rule)
     return {
         "enforcement": ruleset.get("enforcement"),
         "conditions": ruleset.get("conditions"),
         "bypass_actors": ruleset.get("bypass_actors") or [],
-        "rules": sorted(ruleset["rules"], key=lambda r: r["type"]),
+        "rules": rules,
     }
 
 
@@ -191,15 +202,25 @@ def actions(slug, repo, public, unborn, args):
     if unborn or not (gh(fixes, allow_fail=True) or {}).get("enabled"):
         out.append(({"automated_security_fixes": (False, True)}, ("PUT", fixes, None)))
 
+    want = desired_ruleset(args.status_check)
+    if unborn:
+        # Nothing exists to list, and whether rulesets are reachable at all depends on the account's
+        # plan — so this says what would be attempted rather than what will hold.
+        out.append(
+            (
+                {"ruleset": ("not checked", RULESET_NAME)},
+                ("POST", f"repos/{slug}/rulesets", want),
+            )
+        )
+        return out
     # Rulesets are a paid feature on a private repository under a personal account, where the list
     # 403s rather than coming back empty — and private is what --create makes by default.
-    listed = [] if unborn else gh(f"repos/{slug}/rulesets", allow_fail=True)
+    listed = gh(f"repos/{slug}/rulesets", allow_fail=True)
     if listed is None:
         print(
             "  note: rulesets unavailable here — the default branch will stay unprotected"
         )
         return out
-    want = desired_ruleset(args.status_check)
     existing = next((r for r in listed if r.get("name") == RULESET_NAME), None)
     if existing is None:
         out.append(
@@ -287,6 +308,22 @@ def self_check():
     live["rules"] = list(reversed(live["rules"]))
     assert ruleset_shape(live) == ruleset_shape(desired_ruleset())
     assert ruleset_shape(desired_ruleset(["CI"])) != ruleset_shape(desired_ruleset())
+    # GitHub stamps integration_id onto every status-check context it reports. Without this the
+    # ruleset reads as stale on every run and gets re-sent forever, and no other check sees it.
+    stamped = desired_ruleset(["CI"])
+    stamped["rules"] = [
+        {
+            **r,
+            "parameters": {
+                **r["parameters"],
+                "required_status_checks": [{"context": "CI", "integration_id": 15368}],
+            },
+        }
+        if r["type"] == "required_status_checks"
+        else r
+        for r in stamped["rules"]
+    ]
+    assert ruleset_shape(stamped) == ruleset_shape(desired_ruleset(["CI"]))
 
     assert resolve("owner/name") == ("owner", "name")
     print("self-check passed")
