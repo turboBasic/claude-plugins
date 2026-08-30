@@ -107,33 +107,21 @@ def desired_ruleset(status_checks=()):
 
 def ruleset_shape(ruleset):
     # GitHub returns ids, timestamps and links that no desired state can match, so equality is
-    # taken over the fields this command actually sets.
+    # taken over the fields this command sets. Rules arrive in GitHub's own order, hence the sort.
     return {
         "enforcement": ruleset.get("enforcement"),
         "conditions": ruleset.get("conditions"),
-        "bypass_actors": [
-            {k: a.get(k) for k in ("actor_id", "actor_type", "bypass_mode")}
-            for a in ruleset.get("bypass_actors") or []
-        ],
-        "rules": sorted(
-            (
-                {"type": r["type"], "parameters": r.get("parameters")}
-                for r in ruleset["rules"]
-            ),
-            key=lambda r: r["type"],
-        ),
+        "bypass_actors": ruleset.get("bypass_actors") or [],
+        "rules": sorted(ruleset["rules"], key=lambda r: r["type"]),
     }
-
-
-def blank(value):
-    return value in (None, "")
 
 
 def diff(current, desired):
     out = {}
     for key, want in desired.items():
         have = current.get(key)
-        if blank(have) and blank(want):
+        # An unset description or homepage arrives as "" from the API and None from the baseline.
+        if have in (None, "") and want in (None, ""):
             continue
         if have != want:
             out[key] = (have, want)
@@ -191,19 +179,14 @@ def apply(args):
 
     settings = desired_settings(args.description, args.homepage)
     security = security_settings(public)
-    if security:
+    scanning = repo.get("security_and_analysis") or {}
+    # GitHub reports five keys here and this sets two, so a whole-field compare always differs.
+    # Send the field only when one of the two it sets is not already enabled.
+    if security and not all(
+        scanning.get(k, {}).get("status") == "enabled" for k in security
+    ):
         settings["security_and_analysis"] = security
-    current = dict(repo)
-    if security:
-        current["security_and_analysis"] = {
-            k: {
-                "status": (repo.get("security_and_analysis") or {})
-                .get(k, {})
-                .get("status")
-            }
-            for k in security
-        }
-    changes = diff(current, settings)
+    changes = diff(repo, settings)
 
     topic_change = None
     if args.topic:
@@ -241,22 +224,20 @@ def apply(args):
             "current" if ruleset_shape(full) == ruleset_shape(want_ruleset) else "stale"
         )
 
-    report(changes)
+    # Reported after the settings rather than merged into them: these are separate endpoints, and
+    # sorting them together would interleave them with the field names.
+    extra = {}
     if topic_change:
-        report({"topics": topic_change})
+        extra["topics"] = topic_change
     if not alerts:
-        report({"vulnerability_alerts": (False, True)})
+        extra["vulnerability_alerts"] = (False, True)
     if not fixes:
-        report({"automated_security_fixes": (False, True)})
+        extra["automated_security_fixes"] = (False, True)
     if ruleset_state != "current":
-        report({"ruleset": (ruleset_state, RULESET_NAME)})
-    pending = (
-        bool(changes or topic_change)
-        or not alerts
-        or not fixes
-        or ruleset_state != "current"
-    )
-    if not pending:
+        extra["ruleset"] = (ruleset_state, RULESET_NAME)
+    report(changes)
+    report(extra)
+    if not (changes or extra):
         print("  nothing to change")
         return
     if DRY:
