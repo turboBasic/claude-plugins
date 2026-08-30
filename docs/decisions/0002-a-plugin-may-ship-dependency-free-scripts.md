@@ -63,6 +63,8 @@ keeps the dependency list empty rather than merely short.
 `mise run ci` now executes something this repository ships, so the gate is no longer a pure reader,
 and Python becomes a file type this repository registers. `plugin-version-bumped` widens to
 `<p>/scripts`, without which a script-only edit ships against the copy a consumer already installed.
+The evidence is a run: this repository took the baseline on 2026-08-30, dropping `has_wiki` and
+`allow_merge_commit` and gaining `protect-default-branch`, and a second run reported nothing to change.
 
 Types are unchecked. TD-01 holds it, due when a second plugin here ships a script — the point at
 which the gate surface stops being one hook and a shared typecheck starts paying for itself.
