@@ -56,8 +56,7 @@ claude plugin marketplace add .
 
 GitHub stores these as opaque UI state — no REST endpoint, and no `SavedView` or `IssueView` type in the
 GraphQL schema — so they are recreated by hand on the Issues tab from the filters below. Measured
-2026-08-30. Both exclude the epic, since a `roadmap`
-issue is the milestone rather than work in it.
+2026-08-30. Both exclude the epic, since a `roadmap` issue is the milestone rather than work in it.
 
 | View | Filter |
 | --- | --- |
