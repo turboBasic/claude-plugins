@@ -1,6 +1,9 @@
 [tools]
 claude = "latest"
 node = "24.19.0"
+# The interpreter `repo-settings-self-check` runs under. Pinned because the hook is `language: system`,
+# so without this the gate borrows whatever python3 a contributor's own config happens to resolve.
+python = "3.14.7"
 "npm:cspell-cli" = "10.0.1"
 "npm:markdownlint-cli2" = "0.23.2"
 prek = "latest"
