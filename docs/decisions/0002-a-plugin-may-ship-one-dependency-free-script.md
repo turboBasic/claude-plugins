@@ -5,7 +5,7 @@ date: 2026-08-30
 scope: marketplace
 ---
 
-# ADR 0002 — A plugin may ship one dependency-free script, and that is not a project
+# ADR 0002 — A plugin may ship dependency-free scripts, and that is not a project
 
 ## Decision
 
@@ -15,16 +15,12 @@ language's standard library, in Python and no second language. It brings no pack
 are hooks in the existing `.pre-commit-config.yaml`, selected by a `mise` task like every other gate,
 and the behavioural check it carries is a `--self-check` flag over its own pure functions.
 
-A third-party import, a second language, or a script grown past what one `--self-check` can hold
-exhausts this and reopens the question. **A file count does not** — the gate is file-count-blind, so
-splitting one script in two costs nothing while the first script in a second plugin costs a hook.
-
 ## Context
 
 `scaffold` needs to apply a GitHub repository baseline — merge methods, wiki and discussions off,
-topics, security alerts, a branch ruleset. Nine API calls whose payloads must be identical every run,
-so that a second run over the same repository changes nothing. Prose cannot promise that: a model
-re-deriving nine payloads from a description is the drift the baseline exists to remove.
+topics, security alerts, a branch ruleset. Every payload must be identical on every run, so that a
+second run over the same repository changes nothing. Prose cannot promise that: a model re-deriving
+those payloads from a description is the drift the baseline exists to remove.
 
 The instruction layer had ruled the opposite by anticipation — the gate "runs nothing a plugin
 ships", and the first plugin needing to run "brings its whole project inside the plugin directory".
@@ -38,7 +34,7 @@ keeps the dependency list empty rather than merely short.
 
 ### One stdlib script, checks at the repository root (SELECTED)
 
-- Adopted because: determinism is the whole point, and it costs one file plus three hook ids.
+- Adopted because: determinism is the whole point, and it costs one file.
 - Adopted because: nothing a consumer installs changes — no sync step, no lockfile, no virtualenv.
 - Adopted despite: no typecheck, recorded as debt rather than solved.
 - Adopted despite: `subprocess` to a CLI is a coarser boundary than a typed HTTP client.
@@ -54,28 +50,26 @@ keeps the dependency list empty rather than merely short.
 - Rejected because: `httpx` buys nothing `gh api` does not, and re-implements token handling across
   three authenticated accounts.
 - Rejected because: it makes `uv` a runtime requirement of the command, not just of this repository.
-- Rejected despite: one file still, and `modern-python` already names this shape for a lone script.
+- Rejected despite: one file still, and no packaging.
 
 ### Leave it prose and let the model make the calls
 
-- Rejected because: nine payloads re-derived per run is the drift being removed, and the failure is
+- Rejected because: payloads re-derived per run are the drift being removed, and the failure is
   silent — a dropped field reads as "no change" in the report.
 - Rejected despite: no new file type, no gate change, no record needed.
 
 ## Consequences
 
-`mise run ci` now executes something this repository ships, so the gate is no longer a pure reader:
-`.pre-commit-config.yaml` grows `ruff-check`, `ruff-format` and a local `repo-settings-self-check`
-hook, reached by `mise run lint:python`. `plugin-version-bumped` widens to `<p>/scripts`, without
-which a script-only edit ships against the copy a consumer already installed. Python becomes a file
-type this repository registers: `.editorconfig` gains `[*.py]`, `.gitignore` gains `__pycache__/` and
-`.ruff_cache/`, and `cspell` gains the `python` dictionary.
+`mise run ci` now executes something this repository ships, so the gate is no longer a pure reader,
+and Python becomes a file type this repository registers. `plugin-version-bumped` widens to
+`<p>/scripts`, without which a script-only edit ships against the copy a consumer already installed.
 
 Types are unchecked. TD-01 holds it, due when a second plugin here ships a script — the point at
 which the gate surface stops being one hook and a shared typecheck starts paying for itself.
 
-Reopen if a plugin here needs a third-party import, a second language, or a script grown past what
-one `--self-check` can hold.
+Reopen on a third-party import, a second language, or a script grown past what one `--self-check`
+can hold — never on a file count, which the gate cannot see: splitting one script in two costs
+nothing, while the first script in a second plugin costs a hook.
 
 ## Links
 

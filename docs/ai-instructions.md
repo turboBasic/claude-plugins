@@ -17,11 +17,12 @@ another repository has none of that: it is that repository, sourced whole, and t
 where it already lives — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md).
 Kebab-case for every directory and file name.
 
-**A plugin here is prose, save for one dependency-free script per plugin under `scripts/`** —
+**A plugin here is prose, save for dependency-free Python under `scripts/`** —
 [ADR 0002](decisions/0002-a-plugin-may-ship-one-dependency-free-script.md) is the allowance and what
 reopens it. Such a script's checks are hooks in `.pre-commit-config.yaml` reached by a `mise` task; it
-brings no `pyproject.toml`, no lockfile and no lint or type configuration of its own. **Anything more is
-a new ruling, not an extension of this one** — a second script in one plugin, or any third-party import.
+brings no `pyproject.toml`, no lockfile and no lint or type configuration of its own. **A third-party
+import or a second language is a new ruling, not an extension of this one** — a file count is not,
+since the gate cannot see one.
 
 `docs/decisions/` holds the records, `NNNN-<slug>.md`, whose `scope:` is one of `marketplace`, `plugin` or
 `tooling`; [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md) is the reference
