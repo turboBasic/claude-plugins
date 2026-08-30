@@ -66,8 +66,7 @@ and Python becomes a file type this repository registers. `plugin-version-bumped
 The evidence is a run: this repository took the baseline on 2026-08-30, dropping `has_wiki` and
 `allow_merge_commit` and gaining `protect-default-branch`, and a second run reported nothing to change.
 
-Types are unchecked. TD-01 holds it, due when a second plugin here ships a script — the point at
-which the gate surface stops being one hook and a shared typecheck starts paying for itself.
+Types are unchecked. [TD-01](../technical-debt.md) holds it, and owns the condition it comes due on.
 
 Reopen on a third-party import, a second language, or a script grown past what one `--self-check`
 can hold — never on a file count, which the gate cannot see: splitting one script in two costs
