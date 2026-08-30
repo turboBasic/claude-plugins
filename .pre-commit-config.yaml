@@ -18,15 +18,19 @@ repos:
       - id: commitizen
         stages: [commit-msg]
 
-  # types_or is overridden on both: upstream's ruff-format also claims `markdown`, which would let a
-  # Python formatter rewrite the fenced blocks in every skill and record here. No args, so Python
-  # wraps at ruff's own 88 rather than at .editorconfig's 100 — narrower, so nothing conflicts, and
-  # no width is configured twice.
+  # types_or is overridden on ruff-format alone, because upstream's ruff-format also claims
+  # `markdown` — which would let a Python formatter rewrite the fenced blocks in every skill and
+  # record here. ruff-check claims only Python shapes, so it keeps upstream's list.
+  # --target-version is what makes the `python3` 3.7 floor that scaffold/commands/github-repo.md
+  # states enforceable: ruff reports version-incompatible syntax as an error, so a walrus or a match
+  # statement fails here rather than in a consumer's shell. No width arg, so Python wraps at ruff's
+  # own 88 rather than at .editorconfig's 100 — narrower, so nothing conflicts, and no width is
+  # configured twice.
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.5
     hooks:
       - id: ruff-check
-        types_or: [python]
+        args: [--target-version=py37]
       - id: ruff-format
         types_or: [python]
 

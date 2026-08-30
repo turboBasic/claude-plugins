@@ -1,6 +1,9 @@
 [tools]
 claude = "latest"
 node = "24.19.0"
+# The interpreter `repo-settings-self-check` runs under. Pinned because the hook is `language: system`,
+# so without this the gate borrows whatever python3 a contributor's own config happens to resolve.
+python = "3.14.7"
 "npm:cspell-cli" = "10.0.1"
 "npm:markdownlint-cli2" = "0.23.2"
 prek = "latest"
@@ -61,8 +64,7 @@ depends = [
   "lint:python",
 ]
 
-# Almost every plugin here is prose. The exception is the Python ADR 0002 allows under a plugin's
-# scripts/, whose --self-check lint:python runs — so the gate is no longer only a reader.
+# lint:python is why `ci` runs something this repository ships rather than only reading it.
 [tasks.ci]
 description = "Run everything CI runs, locally"
 depends = ["lint"]

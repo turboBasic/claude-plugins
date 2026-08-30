@@ -24,11 +24,10 @@ those payloads from a description is the drift the baseline exists to remove.
 
 The instruction layer had ruled the opposite by anticipation — the gate "runs nothing a plugin
 ships", and the first plugin needing to run "brings its whole project inside the plugin directory".
-That was written with no such plugin in hand. Standing one up measured the cost: `uv` in the gate, a
-second lockfile to renew, a nested lint configuration, and `uv sync` in every consumer's clone — all
-to serve one file importing `argparse`, `json`, `subprocess` and `sys`. `gh` absorbs the rest:
-authentication across three accounts, hosts, retries and pagination stay its problem, which is what
-keeps the dependency list empty rather than merely short.
+That was written with no such plugin in hand; standing one up measured the cost, which the `uv`
+option below carries. `gh` absorbs what a dependency otherwise would: authentication across three
+accounts, hosts, retries and pagination stay its problem, which is what keeps the dependency list
+empty rather than merely short.
 
 ## Options
 
@@ -52,10 +51,14 @@ keeps the dependency list empty rather than merely short.
 - Rejected because: it makes `uv` a runtime requirement of the command, not just of this repository.
 - Rejected despite: one file still, and no packaging.
 
+### A `bash` script with `gh api --jq`
+
+- Rejected because: `ruleset_shape`'s nested projection is worse in `jq`, and it guards idempotence.
+- Rejected despite: it avoids this record's whole cost — no interpreter, no ruff, no debt row.
+
 ### Leave it prose and let the model make the calls
 
-- Rejected because: payloads re-derived per run are the drift being removed, and the failure is
-  silent — a dropped field reads as "no change" in the report.
+- Rejected because: the failure is silent — a dropped field reads as "no change" in the report.
 - Rejected despite: no new file type, no gate change, no record needed.
 
 ## Consequences
@@ -63,9 +66,10 @@ keeps the dependency list empty rather than merely short.
 `mise run ci` now executes something this repository ships, so the gate is no longer a pure reader,
 and Python becomes a file type this repository registers. `plugin-version-bumped` widens to
 `<p>/scripts`, without which a script-only edit ships against the copy a consumer already installed.
+The evidence is a run: this repository took the baseline on 2026-08-30, dropping `has_wiki` and
+`allow_merge_commit` and gaining `protect-default-branch`, and a second run reported nothing to change.
 
-Types are unchecked. TD-01 holds it, due when a second plugin here ships a script — the point at
-which the gate surface stops being one hook and a shared typecheck starts paying for itself.
+Types are unchecked. [TD-01](../technical-debt.md) holds it, and owns the condition it comes due on.
 
 Reopen on a third-party import, a second language, or a script grown past what one `--self-check`
 can hold — never on a file count, which the gate cannot see: splitting one script in two costs
