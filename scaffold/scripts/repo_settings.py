@@ -203,36 +203,27 @@ def actions(slug, repo, public, unborn, args):
         out.append(({"automated_security_fixes": (False, True)}, ("PUT", fixes, None)))
 
     want = desired_ruleset(args.status_check)
+    post = ("POST", f"repos/{slug}/rulesets", want)
     if unborn:
         # Nothing exists to list, and whether rulesets are reachable at all depends on the account's
         # plan — so this says what would be attempted rather than what will hold.
-        out.append(
-            (
-                {"ruleset": ("not checked", RULESET_NAME)},
-                ("POST", f"repos/{slug}/rulesets", want),
-            )
-        )
+        out.append(({"ruleset": ("not checked", RULESET_NAME)}, post))
         return out
     # Rulesets are a paid feature on a private repository under a personal account, where the list
     # 403s rather than coming back empty — and private is what --create makes by default.
     listed = gh(f"repos/{slug}/rulesets", allow_fail=True)
     if listed is None:
         print(
-            "  note: rulesets unavailable here — the default branch will stay unprotected"
+            "  note: rulesets unavailable here — the default branch stays unprotected"
         )
         return out
     existing = next((r for r in listed if r.get("name") == RULESET_NAME), None)
     if existing is None:
-        out.append(
-            (
-                {"ruleset": ("absent", RULESET_NAME)},
-                ("POST", f"repos/{slug}/rulesets", want),
-            )
-        )
-    else:
-        path = f"repos/{slug}/rulesets/{existing['id']}"
-        if ruleset_shape(gh(path)) != ruleset_shape(want):
-            out.append(({"ruleset": ("stale", RULESET_NAME)}, ("PUT", path, want)))
+        out.append(({"ruleset": ("absent", RULESET_NAME)}, post))
+        return out
+    path = f"repos/{slug}/rulesets/{existing['id']}"
+    if ruleset_shape(gh(path)) != ruleset_shape(want):
+        out.append(({"ruleset": ("stale", RULESET_NAME)}, ("PUT", path, want)))
     return out
 
 
@@ -311,18 +302,9 @@ def self_check():
     # GitHub stamps integration_id onto every status-check context it reports. Without this the
     # ruleset reads as stale on every run and gets re-sent forever, and no other check sees it.
     stamped = desired_ruleset(["CI"])
-    stamped["rules"] = [
-        {
-            **r,
-            "parameters": {
-                **r["parameters"],
-                "required_status_checks": [{"context": "CI", "integration_id": 15368}],
-            },
-        }
-        if r["type"] == "required_status_checks"
-        else r
-        for r in stamped["rules"]
-    ]
+    stamped["rules"][3]["parameters"]["required_status_checks"][0]["integration_id"] = (
+        15368
+    )
     assert ruleset_shape(stamped) == ruleset_shape(desired_ruleset(["CI"]))
 
     assert resolve("owner/name") == ("owner", "name")
