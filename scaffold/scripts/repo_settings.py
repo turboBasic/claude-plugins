@@ -154,6 +154,67 @@ def create(owner, name, public, description):
     print(f"created {owner}/{name} ({visibility})")
 
 
+def actions(slug, repo, public, unborn, args):
+    # One entry per endpoint that differs: what it reads now, and the request that closes the gap.
+    # Each concern is declared once, so the report and the writes cannot disagree on what is pending.
+    # `unborn` is a suppressed --create: nothing exists to query, so every state is the fresh one.
+    out = []
+
+    settings = desired_settings(args.description, args.homepage)
+    security = security_settings(public)
+    scanning = repo.get("security_and_analysis") or {}
+    # GitHub reports five keys here and this sets two, so a whole-field compare always differs.
+    # Send the field only when one of the two it sets is not already enabled.
+    if security and not all(
+        scanning.get(k, {}).get("status") == "enabled" for k in security
+    ):
+        settings["security_and_analysis"] = security
+    changes = diff(repo, settings)
+    if changes:
+        out.append((changes, ("PATCH", f"repos/{slug}", settings)))
+
+    if args.topic:
+        topics_now = sorted(repo.get("topics") or [])
+        topics_want = sorted(set(args.topic))
+        if topics_now != topics_want:
+            out.append(
+                (
+                    {"topics": (topics_now, topics_want)},
+                    ("PUT", f"repos/{slug}/topics", {"names": topics_want}),
+                )
+            )
+
+    alerts = f"repos/{slug}/vulnerability-alerts"
+    if unborn or gh(alerts, allow_fail=True) is None:
+        out.append(({"vulnerability_alerts": (False, True)}, ("PUT", alerts, None)))
+    fixes = f"repos/{slug}/automated-security-fixes"
+    if unborn or not (gh(fixes, allow_fail=True) or {}).get("enabled"):
+        out.append(({"automated_security_fixes": (False, True)}, ("PUT", fixes, None)))
+
+    # Rulesets are a paid feature on a private repository under a personal account, where the list
+    # 403s rather than coming back empty — and private is what --create makes by default.
+    listed = [] if unborn else gh(f"repos/{slug}/rulesets", allow_fail=True)
+    if listed is None:
+        print(
+            "  note: rulesets unavailable here — the default branch will stay unprotected"
+        )
+        return out
+    want = desired_ruleset(args.status_check)
+    existing = next((r for r in listed if r.get("name") == RULESET_NAME), None)
+    if existing is None:
+        out.append(
+            (
+                {"ruleset": ("absent", RULESET_NAME)},
+                ("POST", f"repos/{slug}/rulesets", want),
+            )
+        )
+    else:
+        path = f"repos/{slug}/rulesets/{existing['id']}"
+        if ruleset_shape(gh(path)) != ruleset_shape(want):
+            out.append(({"ruleset": ("stale", RULESET_NAME)}, ("PUT", path, want)))
+    return out
+
+
 def apply(args):
     owner, name = resolve(args.target)
     slug = f"{owner}/{name}"
@@ -177,85 +238,17 @@ def apply(args):
             "  note: secret scanning skipped — the API rejects it on a private repo without GHAS"
         )
 
-    settings = desired_settings(args.description, args.homepage)
-    security = security_settings(public)
-    scanning = repo.get("security_and_analysis") or {}
-    # GitHub reports five keys here and this sets two, so a whole-field compare always differs.
-    # Send the field only when one of the two it sets is not already enabled.
-    if security and not all(
-        scanning.get(k, {}).get("status") == "enabled" for k in security
-    ):
-        settings["security_and_analysis"] = security
-    changes = diff(repo, settings)
-
-    topic_change = None
-    if args.topic:
-        have = sorted(repo.get("topics") or [])
-        want = sorted(set(args.topic))
-        if have != want:
-            topic_change = (have, want)
-
-    # A suppressed create leaves nothing to query, so every state below is the fresh-repository one.
-    unborn = fresh and DRY
-    alerts = (
-        not unborn
-        and gh(f"repos/{slug}/vulnerability-alerts", allow_fail=True) is not None
-    )
-    fixes = not unborn and bool(
-        (gh(f"repos/{slug}/automated-security-fixes", allow_fail=True) or {}).get(
-            "enabled"
-        )
-    )
-
-    want_ruleset = desired_ruleset(args.status_check)
-    # Rulesets are a paid feature on a private repository under a personal account, where the list
-    # 403s rather than coming back empty — and private is what --create makes by default.
-    listed = [] if unborn else gh(f"repos/{slug}/rulesets", allow_fail=True)
-    if listed is None:
-        print(
-            "  note: rulesets unavailable here — the default branch will stay unprotected"
-        )
-        listed, want_ruleset = [], None
-    existing = next((r for r in listed if r.get("name") == RULESET_NAME), None)
-    ruleset_state = "current" if want_ruleset is None else "absent"
-    if existing:
-        full = gh(f"repos/{slug}/rulesets/{existing['id']}")
-        ruleset_state = (
-            "current" if ruleset_shape(full) == ruleset_shape(want_ruleset) else "stale"
-        )
-
-    # Reported after the settings rather than merged into them: these are separate endpoints, and
-    # sorting them together would interleave them with the field names.
-    extra = {}
-    if topic_change:
-        extra["topics"] = topic_change
-    if not alerts:
-        extra["vulnerability_alerts"] = (False, True)
-    if not fixes:
-        extra["automated_security_fixes"] = (False, True)
-    if ruleset_state != "current":
-        extra["ruleset"] = (ruleset_state, RULESET_NAME)
-    report(changes)
-    report(extra)
-    if not (changes or extra):
+    pending = actions(slug, repo, public, fresh and DRY, args)
+    for pairs, _ in pending:
+        report(pairs)
+    if not pending:
         print("  nothing to change")
         return
     if DRY:
         print("  dry run: nothing was written")
         return
-
-    if changes:
-        gh(f"repos/{slug}", "PATCH", settings)
-    if topic_change:
-        gh(f"repos/{slug}/topics", "PUT", {"names": topic_change[1]})
-    if not alerts:
-        gh(f"repos/{slug}/vulnerability-alerts", "PUT")
-    if not fixes:
-        gh(f"repos/{slug}/automated-security-fixes", "PUT")
-    if ruleset_state == "absent":
-        gh(f"repos/{slug}/rulesets", "POST", want_ruleset)
-    elif ruleset_state == "stale":
-        gh(f"repos/{slug}/rulesets/{existing['id']}", "PUT", want_ruleset)
+    for _, (method, path, body) in pending:
+        gh(path, method, body)
     print("  applied")
 
 

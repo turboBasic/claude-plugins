@@ -50,10 +50,8 @@ hverlin
 tamasfe
 yzhang
 
-# --- GitHub API, for scaffold/scripts/repo_settings.py ---
-GHAS
-
 # --- Vocabulary ---
+GHAS
 frontmatter
 idempotently
 marketplaces
