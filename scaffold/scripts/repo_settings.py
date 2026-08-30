@@ -74,6 +74,13 @@ def security_settings(public):
     }
 
 
+def scanning_satisfied(scanning, security):
+    # GitHub reports five keys under security_and_analysis and this sets two, so a whole-field
+    # compare always differs and would re-send the field on every run. Only the keys it sets count,
+    # and every other key GitHub reports is ignored rather than read as drift.
+    return all(scanning.get(k, {}).get("status") == "enabled" for k in security)
+
+
 def desired_ruleset(status_checks=()):
     rules = [
         {"type": "deletion"},
@@ -174,11 +181,7 @@ def actions(slug, repo, public, unborn, args):
     settings = desired_settings(args.description, args.homepage)
     security = security_settings(public)
     scanning = repo.get("security_and_analysis") or {}
-    # GitHub reports five keys here and this sets two, so a whole-field compare always differs.
-    # Send the field only when one of the two it sets is not already enabled.
-    if security and not all(
-        scanning.get(k, {}).get("status") == "enabled" for k in security
-    ):
+    if security and not scanning_satisfied(scanning, security):
         settings["security_and_analysis"] = security
     changes = diff(repo, settings)
     if changes:
@@ -276,6 +279,22 @@ def self_check():
 
     assert security_settings(public=False) is None
     assert security_settings(public=True)["secret_scanning"]["status"] == "enabled"
+
+    # The second idempotence hazard, alongside ruleset_shape: a fresh repository must read as unmet,
+    # a half-enabled one too, and the three extra keys GitHub reports must not re-send the field.
+    sec = security_settings(public=True)
+    assert not scanning_satisfied({}, sec)
+    assert not scanning_satisfied({"secret_scanning": {"status": "enabled"}}, sec)
+    assert scanning_satisfied(
+        {
+            "secret_scanning": {"status": "enabled"},
+            "secret_scanning_push_protection": {"status": "enabled"},
+            "advanced_security": {"status": "disabled"},
+            "dependabot_security_updates": {"status": "enabled"},
+            "secret_scanning_non_provider_patterns": {"status": "disabled"},
+        },
+        sec,
+    )
 
     solo = desired_ruleset()
     assert [r["type"] for r in solo["rules"]] == [

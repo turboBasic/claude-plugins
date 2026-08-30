@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "scaffold",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Standing a project up — the GitHub repository baseline applied by command, and the toolchain a modern Python project starts from.",
   "author": {
     "name": "Andrii Melnyk",
