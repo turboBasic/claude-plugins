@@ -108,7 +108,7 @@ repos:
           - --files
 
       # The one check that runs something this repository ships, per ADR 0002. `ruff` proves the
-      # script parses; only this proves the nine API payloads it builds are still the intended ones.
+      # script parses; only this proves the payloads it builds are still the intended ones.
       # `files:` keeps it off every run that does not touch the script.
       - id: repo-settings-self-check
         name: the scaffold baseline script self-checks

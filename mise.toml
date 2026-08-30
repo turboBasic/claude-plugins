@@ -61,8 +61,8 @@ depends = [
   "lint:python",
 ]
 
-# Almost every plugin here is prose. The exception is the one script ADR 0002 allows, whose
-# --self-check `lint:python` runs — so the gate is no longer only a reader.
+# Almost every plugin here is prose. The exception is the Python ADR 0002 allows under a plugin's
+# scripts/, whose --self-check lint:python runs — so the gate is no longer only a reader.
 [tasks.ci]
 description = "Run everything CI runs, locally"
 depends = ["lint"]
