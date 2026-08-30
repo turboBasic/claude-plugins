@@ -18,6 +18,18 @@ repos:
       - id: commitizen
         stages: [commit-msg]
 
+  # types_or is overridden on both: upstream's ruff-format also claims `markdown`, which would let a
+  # Python formatter rewrite the fenced blocks in every skill and record here. No args, so Python
+  # wraps at ruff's own 88 rather than at .editorconfig's 100 — narrower, so nothing conflicts, and
+  # no width is configured twice.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.5
+    hooks:
+      - id: ruff-check
+        types_or: [python]
+      - id: ruff-format
+        types_or: [python]
+
   - repo: local
     hooks:
       # check-json above proves the manifests parse; this proves the two that decide whether the
@@ -48,6 +60,8 @@ repos:
       # explicitly. The merge base is inferred from refs alone, never from what happens to be
       # staged. No remote, or a base that does not resolve, falls back to HEAD — the old
       # index-versus-HEAD behaviour — so the gate is silent rather than wrong.
+      # `scripts` counts alongside skills, agents and commands: a consumer runs the cached copy of a
+      # script, so a fixed payload that ships without a bump keeps sending the broken one.
       # No filenames: the unit is the plugin, and prek splits long filename lists across invocations.
       - id: plugin-version-bumped
         name: an edited plugin bumps its version
@@ -62,9 +76,10 @@ repos:
           rc=0;
           for m in */.claude-plugin/plugin.json; do [ -e "$m" ] || continue;
           p="${m%%/*}";
-          git diff --cached --quiet "$cmp" -- "$p/skills" "$p/agents" "$p/commands" && continue;
+          git diff --cached --quiet "$cmp" -- "$p/skills" "$p/agents" "$p/commands" "$p/scripts"
+          && continue;
           git diff --cached "$cmp" -- "$m" | grep -q "^+.*\"version\"" ||
-          { echo "$p: skills, agents or commands changed against $cmp but $m version did not.
+          { echo "$p: skills, agents, commands or scripts changed against $cmp but $m version did not.
           Bump it, or consumers keep the cached copy."; rc=1; };
           done;
           exit $rc'
@@ -91,6 +106,16 @@ repos:
           - --no-summary
           - --gitignore
           - --files
+
+      # The one check that runs something this repository ships, per ADR 0002. `ruff` proves the
+      # script parses; only this proves the payloads it builds are still the intended ones.
+      # `files:` keeps it off every run that does not touch the script.
+      - id: repo-settings-self-check
+        name: the scaffold baseline script self-checks
+        entry: python3 scaffold/scripts/repo_settings.py --self-check
+        language: system
+        files: ^scaffold/scripts/
+        pass_filenames: false
 
       # `.markdownlint-cli2.jsonc` owns which files and rules apply, so no args are needed here.
       - id: markdownlint-cli2

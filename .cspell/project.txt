@@ -15,13 +15,14 @@ dxc
 popcircles
 sds
 
-# --- Python, for the modern-python skill ---
+# --- Python, for the modern-python skill and scaffold/scripts ---
 boto
 dynaconf
 httpx
 isort
 pydantic
 pylint
+stdlib
 structlog
 typer
 virtualenv
@@ -50,7 +51,9 @@ tamasfe
 yzhang
 
 # --- Vocabulary ---
+GHAS
 frontmatter
+idempotently
 marketplaces
 misordered
 negotiables

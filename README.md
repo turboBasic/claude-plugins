@@ -42,7 +42,7 @@ each answers to `<plugin>:<tool>` (`/chezmoi-docs:chezmoi`). They carry their ow
 
 ```sh
 mise run setup    # git hooks
-mise run lint     # markdownlint, cspell, taplo, manifest checks
+mise run lint     # markdownlint, cspell, taplo, ruff, the script self-check, manifests, versions
 mise run ci       # what CI runs
 ```
 

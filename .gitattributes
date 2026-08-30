@@ -1,6 +1,7 @@
 * text=auto eol=lf
 
 *.md text
+*.py text
 *.json text
 *.jsonc text
 *.toml text

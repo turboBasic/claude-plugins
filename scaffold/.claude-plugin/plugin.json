@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "scaffold",
-  "version": "0.4.0",
-  "description": "The toolchain a modern Python project starts from — uv, hatchling, ruff, Pyright and the runtime libraries that go with them.",
+  "version": "0.5.0",
+  "description": "Standing a project up — the GitHub repository baseline applied by command, and the toolchain a modern Python project starts from.",
   "author": {
     "name": "Andrii Melnyk",
     "url": "https://github.com/turboBasic"
