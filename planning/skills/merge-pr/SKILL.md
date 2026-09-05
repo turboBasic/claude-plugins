@@ -19,8 +19,11 @@ Merges through GitHub, never locally.
 
 3. **Rebase mode** — `gh pr merge --rebase`. Commits already read as intended, no message to write.
 
-4. **Squash mode** — `gh pr merge --squash --subject "<title>" --body "<summary>"` (note
-   `--subject`, not `--title`). The body summarizes the net change across every commit and the full
+4. **Squash mode** — `gh pr merge --squash --subject "<title> (#<number>)" --body "<summary>"` (note
+   `--subject`, not `--title`). **The trailing `(#<number>)` is not optional** — GitHub appends it
+   only when it composes the subject itself, so passing `--subject` without it lands a commit with no
+   reference back to its PR, which is what changelog tooling links on. Use the `number` from step 1.
+   The body summarizes the net change across every commit and the full
    diff, not a commit-by-commit log, and invents nothing the diff does not cover. Derive the title as
    Conventional Commits, imperative, no trailing period, at most 72 characters: all commits sharing a
    type and scope, use them; types spanning several, take the dominant one, preferring `feat` over
