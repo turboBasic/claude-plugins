@@ -16,6 +16,7 @@ standing the project up is ordinary edits.
 | Build backend | `hatchling` |
 | Lint and format | `ruff` |
 | Types | `Pyright`, strict |
+| Tests | `pytest` |
 | CLI parsing | `Typer` |
 | Terminal output | `Rich` |
 | Structured logging | `structlog` |
@@ -37,6 +38,14 @@ standing the project up is ordinary edits.
   internal structure.
 - **`Dynaconf` is the only reader of the environment.** Configuration reaches the rest of the code as an
   argument, so nothing else reads it.
+- **Tests are `pytest` functions.** Bare functions and fixtures in `tests/` at the repository root, beside
+  `src/`; a `unittest.TestCase` subclass only where the code being extended already uses them.
+- **The layout is `src/<package_name>/`** with an `__init__.py`, so the package is imported by name and the
+  tests run against the installed thing rather than the working directory.
+- **`pyproject.toml` is the only packaging file** — no `setup.py`, no `setup.cfg`, no `requirements.txt`.
+- **Typing is current, not backwards-compatible.** `X | None` over `typing.Optional`, built-in `dict` and
+  `list` over `typing.Dict` and `typing.List`, no `from __future__ import annotations`, and a
+  `TYPE_CHECKING` guard only to break a genuine import cycle.
 - **A tool absent from the table is absent on purpose.** Adding one is a choice to state, not to assume.
 
 ## A single-file script is not this

@@ -19,12 +19,12 @@
     {
       "name": "stacks",
       "source": "./stacks",
-      "description": "Shell scripts laid out top-down, and the AWS CLI held to read-only."
+      "description": "Shell, Go and Terraform conventions, and the AWS CLI held to read-only."
     },
     {
       "name": "scaffold",
       "source": "./scaffold",
-      "description": "Standing a project up — the GitHub repository baseline applied by command, and the toolchain a modern Python project starts from."
+      "description": "Standing a project up — the file floor a repository starts with, the GitHub repository baseline applied by command, and the toolchain a modern Python project starts from."
     },
     {
       "name": "1password-docs",

@@ -32,7 +32,11 @@ chezmoi
 commitizen
 cspell
 dotfiles
+gofmt
+goimports
+golangci
 jsonc
+lefthook
 markdownlint
 mise
 prek
@@ -49,6 +53,12 @@ esbenp
 hverlin
 tamasfe
 yzhang
+
+# --- Go and Terraform identifiers ---
+Errorf
+nolint
+tfstate
+tfvars
 
 # --- Vocabulary ---
 GHAS

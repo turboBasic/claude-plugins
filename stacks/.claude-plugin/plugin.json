@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "stacks",
-  "version": "0.1.0",
-  "description": "Stack conventions that outlived their repos — shell scripts laid out top-down from main(), and the AWS CLI held to read-only with the caller's identity named first.",
+  "version": "0.3.0",
+  "description": "Stack conventions that outlived their repos — shell scripts laid out top-down from main(), Go and Terraform projects held to one shape, and the AWS CLI held to read-only with the caller's identity named first.",
   "author": {
     "name": "Andrii Melnyk",
     "url": "https://github.com/turboBasic"

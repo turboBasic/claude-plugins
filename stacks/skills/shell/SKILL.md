@@ -5,7 +5,7 @@ description: Lay a shell script out top-down - a header, strict mode, main() bef
 
 # Shell script structure
 
-Applies to every `.sh` and `.bash` file written or touched. A script that does not match this shape yet is
+Applies to every `.sh`, `.bash` and `.zsh` file written or touched. A script that does not match this shape yet is
 refactored into it as part of the change that touches it.
 
 ## The order
@@ -21,6 +21,13 @@ refactored into it as part of the change that touches it.
 it, no nested loops, no `case` beyond argument parsing. Helpers take verb names — `validate_inputs`,
 `run_destroy` — declare every variable `local`, and let `set -e` propagate failure rather than swallowing
 it. Nothing runs at the top level but `set …`, the constants `main()` genuinely cannot own, and `main "$@"`.
+
+Names are `snake_case`, functions and locals alike; `UPPER_CASE` is reserved for what is exported. Every
+expansion is quoted — `"$var"`, `"${arr[@]}"` — unless the word-splitting is the point of the line.
+
+**Another dialect changes the shebang and nothing else:** `#!/usr/bin/env zsh` for Zsh, `#!/bin/sh` only where
+POSIX portability is required. `shellcheck` has no Zsh dialect, so a `.zsh` file is unchecked by it — which is
+a reason for the layout above to hold there, not a licence to drop it.
 
 **`.editorconfig` wins over anything below.** Read it before writing, for indentation, line endings,
 charset and final newline.
