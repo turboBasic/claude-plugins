@@ -25,6 +25,8 @@ rules add to this loop without replacing it.
    session is worth naming and no reason to stop.
 5. **Execute the first unchecked task as written.** If executing it reveals the task is wrong, misordered
    or superseded, that ends the run: report it and ask. Do not rescope it and do not step over it.
+   Any temporary scripts, logs or artifacts created during execution of the plan should be kept in a
+   sibling directory of the plan file, eg. for `<slug>.plan.md`, keep them in `<slug>/`.
 6. **Verify** exactly what the `Verify:` line asks and nothing less. A `Verify:` naming a command means
    running it, not reasoning about what it would print.
 7. **Run the gates the repo defines**, and fix what fails. `just --list` and `mise tasks` name them — a
