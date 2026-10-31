@@ -1,6 +1,6 @@
 # claude-plugins
 
-Shared Claude Code skills and agents for turboBasic projects, distributed as a plugin marketplace.
+Shared Claude Code and Codex skills for turboBasic projects, distributed as plugin marketplaces.
 
 ## Use it
 
@@ -30,6 +30,14 @@ claude plugin install planning@turbobasic --scope project
 
 A plugin's skills are namespaced, so `/planning:write-plan` never collides with a `write-plan` skill
 the repository defines for itself. Where both exist, the bare `/write-plan` is the repository's.
+
+## Codex
+
+Add this repository as a plugin marketplace with `codex plugin marketplace add turboBasic/claude-plugins`.
+The repo marketplace exposes the same four in-repository plugins; Codex loads their existing skill
+files directly. Claude commands and agents do not exist in Codex plugins, so `github-repo` and the
+reviewer persona are available as skills; architect and product-owner behavior lives in its existing
+workflows. The documentation plugins owned by other repositories are not mirrored here.
 
 ## Documentation lookups
 

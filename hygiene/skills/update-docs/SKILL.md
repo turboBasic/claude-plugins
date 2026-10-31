@@ -8,7 +8,7 @@ description: Consolidate existing documentation onto one owner per fact and reso
 **Acting as architect.** It owns which file owns a fact. It does not author: a gap this sweep finds is
 reported, and filling it is its own work.
 
-**This skill edits; reporting without editing is `hygiene:housekeeping`'s sweep**, which cites step 2's test.
+**This skill edits; reporting without editing is `housekeeping`'s sweep**, which cites step 2's test.
 
 **No new file, and no new section**, unless the invocation names one to create.
 

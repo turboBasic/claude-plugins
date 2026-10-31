@@ -1,0 +1,20 @@
+{
+  "name": "scaffold",
+  "version": "0.8.1",
+  "description": "Project setup guidance, GitHub repository baselines and a modern Python toolchain.",
+  "author": {
+    "name": "Andrii Melnyk",
+    "url": "https://github.com/turboBasic"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Scaffold",
+    "shortDescription": "Set up and scaffold projects",
+    "longDescription": "Establish a project baseline, apply a GitHub repository baseline, and start a modern Python project with an appropriate toolchain.",
+    "developerName": "Andrii Melnyk",
+    "category": "Developer Tools",
+    "capabilities": ["Scaffold projects", "Set up GitHub repositories", "Set up Python"],
+    "logo": "./assets/icon.svg",
+    "composerIcon": "./assets/icon.svg"
+  }
+}

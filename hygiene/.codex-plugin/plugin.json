@@ -1,0 +1,20 @@
+{
+  "name": "hygiene",
+  "version": "0.2.1",
+  "description": "Review repository drift and consolidate documentation onto one owner per fact.",
+  "author": {
+    "name": "Andrii Melnyk",
+    "url": "https://github.com/turboBasic"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Hygiene",
+    "shortDescription": "Keep repos and docs clean",
+    "longDescription": "Sweep a repository for drift across its gates, instructions and permissions, and consolidate documentation so each fact has one owner.",
+    "developerName": "Andrii Melnyk",
+    "category": "Developer Tools",
+    "capabilities": ["Review repository drift", "Consolidate documentation"],
+    "logo": "./assets/icon.svg",
+    "composerIcon": "./assets/icon.svg"
+  }
+}

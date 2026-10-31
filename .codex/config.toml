@@ -1,0 +1,11 @@
+[plugins."planning@turbobasic"]
+enabled = true
+
+[plugins."hygiene@turbobasic"]
+enabled = true
+
+[plugins."stacks@turbobasic"]
+enabled = true
+
+[plugins."scaffold@turbobasic"]
+enabled = true

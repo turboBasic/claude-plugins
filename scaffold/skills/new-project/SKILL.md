@@ -43,8 +43,8 @@ what makes the hooks installable as the repository's own pre-commit gate.
 
 `docs/ai-instructions.md` is the authoritative file, holding the project overview, the stack, the structure
 tree, the code-generation rules and the behaviour guidelines. Every other AI entry point is a thin pointer
-to it — `CLAUDE.md` for Claude Code, `.github/copilot-instructions.md` for Copilot — so a rule has one home
-and a tool-specific file never becomes a second copy.
+to it — `CLAUDE.md` for Claude Code, `AGENTS.md` for Codex, and `.github/copilot-instructions.md`
+for Copilot — so a rule has one home and a tool-specific file never becomes a second copy.
 
 - **The structure tree is updated in the change that adds or removes a directory**, not in a later sweep.
 - **Before adding a document, check what already covers it.** Updating the owner and linking to it beats a

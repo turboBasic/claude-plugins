@@ -1,0 +1,20 @@
+{
+  "name": "stacks",
+  "version": "0.3.0",
+  "description": "Conventions for shell, Go, Terraform and read-only AWS CLI work.",
+  "author": {
+    "name": "Andrii Melnyk",
+    "url": "https://github.com/turboBasic"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Stacks",
+    "shortDescription": "Tool specific repo conventions",
+    "longDescription": "Apply the shared shell, Go and Terraform conventions, and keep AWS CLI inspection read-only.",
+    "developerName": "Andrii Melnyk",
+    "category": "Developer Tools",
+    "capabilities": ["Work with shell", "Work with Go", "Work with Terraform", "Inspect AWS"],
+    "logo": "./assets/icon.svg",
+    "composerIcon": "./assets/icon.svg"
+  }
+}

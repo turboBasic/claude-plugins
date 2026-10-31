@@ -2,20 +2,31 @@
 
 ## What this repository is
 
-A Claude Code **plugin marketplace**. It distributes the skills and agents shared across turboBasic
-projects, so that a skill has one home instead of a diverged copy in every repo that wanted it.
+A Claude Code and Codex **plugin marketplace**. It distributes the skills and agents shared across
+turboBasic projects, so that a skill has one home instead of a diverged copy in every repo that wanted it.
 
 It is public: nothing here may name an internal system, a ticket key, a hostname or a team.
 Work-specific skills live in a separate org-hosted marketplace.
 
 ## Layout
 
-`.claude-plugin/marketplace.json` is the catalog, one entry per plugin. A plugin authored here has a
-relative source (`./<plugin>`), holds only `plugin.json` in `.claude-plugin/`, and keeps
+`.claude-plugin/marketplace.json` is the Claude catalog, one entry per plugin. A plugin authored here
+has a relative source (`./<plugin>`), holds only `plugin.json` in `.claude-plugin/`, and keeps
 `skills/<name>/SKILL.md`, `commands/<name>.md` and `agents/<name>.md` at its root. A plugin owned by
 another repository has none of that: it is that repository, sourced whole, and the entry names the skill
 where it already lives — [ADR 0001](decisions/0001-a-plugin-owned-elsewhere-is-the-whole-repository.md).
 Kebab-case for every directory and file name.
+
+`.agents/plugins/marketplace.json` is the Codex catalog. Its entries point to the same four local plugin
+directories, each of which carries a `.codex-plugin/plugin.json` compatibility manifest referencing the
+existing `skills/` directory. Codex plugins package skills; Claude commands become skills, and agent
+behavior is converted to skills, folded into existing workflows where it fits. Documentation plugins
+owned by other repositories stay out of this catalog until those repositories provide Codex plugin
+manifests.
+
+The root `.codex/config.toml` enables these four marketplace plugins for this repository. Each plugin's
+`assets/icon.svg` is its Codex listing icon; skill bodies remain the shared source of workflow guidance.
+`AGENTS.md` and `CLAUDE.md` point contributors to this instruction layer.
 
 **A plugin here is prose, save for dependency-free Python under `scripts/`** —
 [ADR 0002](decisions/0002-a-plugin-may-ship-dependency-free-scripts.md) is the allowance and what
@@ -117,7 +128,8 @@ available; `## What it measures against`; `## Method`; `## Output`, pointing at 
 
 `mise run ci` is the gate; run it before reporting work done — nothing is installed globally.
 
-The `claude-code-guide` agent owns Claude Code's own formats; ask it rather than guessing a field name.
+Claude Code formats belong to the `claude-code-guide` agent; Codex formats belong to Codex's official
+plugin documentation. Do not guess a field name.
 
 ## Prose
 

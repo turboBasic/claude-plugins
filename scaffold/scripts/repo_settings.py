@@ -10,6 +10,7 @@ import sys
 # Not read off any repository, and the key a ruleset is matched on: the rulesets that exist across an
 # account are named whatever each was named, so this is the baseline's own ruling.
 RULESET_NAME = "protect-default-branch"
+PROJECT_CI_CHECK = "checks / project-ci"
 
 # Every value here is the baseline's ruling, not a reading of anyone's tree — including the ones an
 # owner might have gone the other way on, `has_projects` above all. A baseline exists to stop the
@@ -81,22 +82,54 @@ def scanning_satisfied(scanning, security):
     return all(scanning.get(k, {}).get("status") == "enabled" for k in security)
 
 
-def desired_ruleset(status_checks=()):
+def code_scanning_settings():
+    return {
+        "state": "configured",
+        "query_suite": "default",
+        "threat_model": "remote_and_local",
+    }
+
+
+def code_scanning_satisfied(current, desired):
+    return all(current.get(key) == value for key, value in desired.items())
+
+
+def private_vulnerability_reporting_satisfied(reporting):
+    return reporting.get("enabled") is True
+
+
+def desired_ruleset(status_checks=(), public=False):
+    status_checks = list(dict.fromkeys([PROJECT_CI_CHECK] + list(status_checks)))
     rules = [
         {"type": "deletion"},
         {"type": "non_fast_forward"},
         {"type": "required_linear_history"},
+        {
+            "type": "required_status_checks",
+            "parameters": {
+                "strict_required_status_checks_policy": False,
+                "do_not_enforce_on_create": False,
+                "required_status_checks": [{"context": c} for c in status_checks],
+            },
+        },
     ]
-    if status_checks:
-        rules.append(
-            {
-                "type": "required_status_checks",
-                "parameters": {
-                    "strict_required_status_checks_policy": False,
-                    "do_not_enforce_on_create": False,
-                    "required_status_checks": [{"context": c} for c in status_checks],
+    if public:
+        rules.extend(
+            [
+                {
+                    "type": "code_scanning",
+                    "parameters": {
+                        "code_scanning_tools": [
+                            {
+                                "tool": "CodeQL",
+                                "alerts_threshold": "errors",
+                                "security_alerts_threshold": "high_or_higher",
+                            }
+                        ]
+                    },
                 },
-            }
+                {"type": "code_quality", "parameters": {"severity": "errors"}},
+            ]
         )
     return {
         "name": RULESET_NAME,
@@ -205,7 +238,30 @@ def actions(slug, repo, public, unborn, args):
     if unborn or not (gh(fixes, allow_fail=True) or {}).get("enabled"):
         out.append(({"automated_security_fixes": (False, True)}, ("PUT", fixes, None)))
 
-    want = desired_ruleset(args.status_check)
+    if public:
+        code_scanning = code_scanning_settings()
+        code_scanning_path = f"repos/{slug}/code-scanning/default-setup"
+        current_scanning = {} if unborn else gh(code_scanning_path)
+        current_shape = {key: current_scanning.get(key) for key in code_scanning}
+        if not code_scanning_satisfied(current_scanning, code_scanning):
+            out.append(
+                (
+                    {"code_scanning_default_setup": (current_shape, code_scanning)},
+                    ("PATCH", code_scanning_path, code_scanning),
+                )
+            )
+
+        reporting_path = f"repos/{slug}/private-vulnerability-reporting"
+        reporting = {} if unborn else gh(reporting_path)
+        if not private_vulnerability_reporting_satisfied(reporting):
+            out.append(
+                (
+                    {"private_vulnerability_reporting": (False, True)},
+                    ("PUT", reporting_path, None),
+                )
+            )
+
+    want = desired_ruleset(args.status_check, public)
     post = ("POST", f"repos/{slug}/rulesets", want)
     if unborn:
         # Nothing exists to list, and whether rulesets are reachable at all depends on the account's
@@ -296,18 +352,53 @@ def self_check():
         sec,
     )
 
+    code_scanning = code_scanning_settings()
+    assert code_scanning == {
+        "state": "configured",
+        "query_suite": "default",
+        "threat_model": "remote_and_local",
+    }
+    assert not code_scanning_satisfied({}, code_scanning)
+    assert code_scanning_satisfied(
+        {**code_scanning, "languages": ["go"]}, code_scanning
+    )
+    assert not private_vulnerability_reporting_satisfied({})
+    assert private_vulnerability_reporting_satisfied({"enabled": True})
+
     solo = desired_ruleset()
     assert [r["type"] for r in solo["rules"]] == [
         "deletion",
         "non_fast_forward",
         "required_linear_history",
+        "required_status_checks",
+    ]
+    assert solo["rules"][3]["parameters"]["required_status_checks"] == [
+        {"context": PROJECT_CI_CHECK}
     ]
     assert solo["conditions"]["ref_name"]["include"] == ["~DEFAULT_BRANCH"]
     assert solo["bypass_actors"][0]["actor_id"] == 5
-    checked = desired_ruleset(["CI"])
-    assert len(checked["rules"]) == 4
+    public_ruleset = desired_ruleset(public=True)
+    assert [r["type"] for r in public_ruleset["rules"]] == [
+        "deletion",
+        "non_fast_forward",
+        "required_linear_history",
+        "required_status_checks",
+        "code_scanning",
+        "code_quality",
+    ]
+    assert public_ruleset["rules"][4]["parameters"]["code_scanning_tools"] == [
+        {
+            "tool": "CodeQL",
+            "alerts_threshold": "errors",
+            "security_alerts_threshold": "high_or_higher",
+        }
+    ]
+    assert public_ruleset["rules"][5]["parameters"]["severity"] == "errors"
+    checked = desired_ruleset(["CI", PROJECT_CI_CHECK], public=True)
+    assert len(checked["rules"]) == 6
     assert checked["rules"][3]["parameters"]["required_status_checks"] == [
-        {"context": "CI"}
+        {"context": PROJECT_CI_CHECK},
+        {"context": "CI"},
     ]
 
     # An unset homepage arrives as "" from the API and None from the baseline: not a change.

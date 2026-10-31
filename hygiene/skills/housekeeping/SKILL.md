@@ -16,7 +16,7 @@ Run every check even when an earlier one fails: a broken gate says nothing about
    finding,
    quoted with the file and line the tool printed. A hook that rewrites a file is a finding too — the
    rewrite is drift that was sitting in the tree, even though the hook repaired it.
-2. **Duplication.** `hygiene:update-docs` owns the one-owner rule and the test for a repeat; this check
+2. **Duplication.** `update-docs` owns the one-owner rule and the test for a repeat; this check
    applies them wider than the docs, across the live Markdown of the instruction layer, `.claude/skills/`,
    `.claude/agents/`, the pointer files under `.github/`, and the human-facing layer. Report, never edit.
 3. **Stale permissions.** Every `.claude/settings*.json` in the repo names permission rules by path and

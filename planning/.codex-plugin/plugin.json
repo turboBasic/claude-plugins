@@ -1,0 +1,20 @@
+{
+  "name": "planning",
+  "version": "0.4.6",
+  "description": "Planning workflows for writing issues, plans and records, executing phases, reviewing work and landing pull requests.",
+  "author": {
+    "name": "Andrii Melnyk",
+    "url": "https://github.com/turboBasic"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Planning",
+    "shortDescription": "Plan and ship project work",
+    "longDescription": "Write issues, plans and decision records; execute planned phases; review backlogs and changes; and land pull requests.",
+    "developerName": "Andrii Melnyk",
+    "category": "Productivity",
+    "capabilities": ["Plan work", "Review changes", "Manage pull requests"],
+    "logo": "./assets/icon.svg",
+    "composerIcon": "./assets/icon.svg"
+  }
+}
